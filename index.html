@@ -16,7 +16,7 @@
         html, body {
             width: 100vw;
             height: 100vh;
-            overflow: hidden; /* Elimina la barra de desplazamiento */
+            overflow: hidden;
             background-color: #0b0f19;
             color: #ffffff;
         }
@@ -234,7 +234,7 @@
         <div class="clock-block">
             <div class="date-display" id="fecha-actual">Cargando fecha...</div>
             <div class="clock-display" id="reloj">00:00:00</div>
-            <div id="ultima-sync"> Sincronizando...</div> 
+            <div id="ultima-sync">Sincronizando...</div> 
         </div>
     </header>
 
@@ -331,15 +331,17 @@
         async function cargarDatosGoogle() {
             try {
                 const url = `https://opensheet.elk.sh/${SHEET_ID}/${SHEET_NAME}`;
+                
+                // Petición limpia sin headers que bloqueen OpenSheet
                 const response = await fetch(url);
 
                 if (!response.ok) {
-                    throw new Error("No se pudo acceder a Google Sheets");
+                    throw new Error(`No se pudo acceder a Google Sheets (Status: ${response.status})`);
                 }
 
                 const datos = await response.json();
 
-                // Función auxiliar para buscar claves sin importar mayúsculas, minúsculas ni espacios
+                // Función auxiliar para buscar claves sin importar mayúsculas/minúsculas
                 const obtenerValor = (fila, ...clavesPosibles) => {
                     const claveEncontrada = Object.keys(fila).find(k => 
                         clavesPosibles.some(cp => k.trim().toLowerCase() === cp.toLowerCase())
@@ -357,7 +359,7 @@
                         docente: obtenerValor(fila, "DOCENTE", "PROFESOR", "INSTRUCTOR"),
                         debriefing: obtenerValor(fila, "DEBRIEFING", "DEBRIEF")
                     }))
-                    .filter(item => item.horario !== ""); // Ignora filas sin horario
+                    .filter(item => item.horario !== ""); // Filtra filas vacías
 
                 if (programaDiario.length === 0) {
                     programaDiario = [{
@@ -458,7 +460,6 @@
             document.getElementById('tabla-finalizados').innerHTML = htmlFinalizados || '<tr><td colspan="8" class="empty-row">No hay clases finalizadas aún.</td></tr>';
         }
 
-        // Color por especialidad
         function colorMateria(materia) {
             if (!materia) return "#f8fafc";
             const texto = materia
@@ -474,7 +475,6 @@
             return "#f8fafc";
         }
 
-        // SISTEMA ANTIRREPOSO DE PANTALLA DE TV
         let wakeLock = null;
 
         async function activarMantenerPantallaEncendida() {
@@ -517,7 +517,7 @@
 
         setInterval(actualizarRelojYEstados, 1000);
         cargarDatosGoogle();
-        setInterval(cargarDatosGoogle, 60000);
+        setInterval(cargarDatosGoogle, 15000); // Consulta Google Sheets cada 15 segundos
         activarMantenerPantallaEncendida();
     </script>
 </body>
