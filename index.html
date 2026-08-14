@@ -330,73 +330,76 @@ By Dr_Morbe
         }
 
         async function cargarDatosGoogle() {
-            try {
-                const url = `https://opensheet.elk.sh/${SHEET_ID}/${SHEET_NAME}`;
-                
-                // Petición limpia sin headers que bloqueen OpenSheet
-                const response = await fetch(url);
+    try {
+        const url = `https://opensheet.elk.sh/${SHEET_ID}/${SHEET_NAME}`;
+        const response = await fetch(url);
 
-                if (!response.ok) {
-                    throw new Error(`No se pudo acceder a Google Sheets (Status: ${response.status})`);
-                }
-
-                const datos = await response.json();
-
-                // Función auxiliar para buscar claves sin importar mayúsculas/minúsculas
-                const obtenerValor = (fila, ...clavesPosibles) => {
-                    const claveEncontrada = Object.keys(fila).find(k => 
-                        clavesPosibles.some(cp => k.trim().toLowerCase() === cp.toLowerCase())
-                    );
-                    return claveEncontrada ? String(fila[claveEncontrada]).trim() : "";
-                };
-
-                programaDiario = datos
-                    .map(fila => ({
-                        horario: obtenerValor(fila, "HORARIO", "HORARIOS", "HORA"),
-                        sala: obtenerValor(fila, "SALA / LAB", "SALA", "LAB", "LABORATORIO"),
-                        materia: obtenerValor(fila, "MATERIA", "ASIGNATURA", "CURSO"),
-                        sem: obtenerValor(fila, "SEM.", "SEM", "SEMESTRE"),
-                        grupo: obtenerValor(fila, "GRUPO", "GRP"),
-                        docente: obtenerValor(fila, "DOCENTE", "PROFESOR", "INSTRUCTOR"),
-                        debriefing: obtenerValor(fila, "DEBRIEFING", "DEBRIEF")
-                    }))
-                    .filter(item => item.horario !== ""); // Filtra filas vacías
-
-                if (programaDiario.length === 0) {
-                    programaDiario = [{
-                        horario: "",
-                        sala: "",
-                        materia: "NO HAY TALLERES PROGRAMADOS PARA HOY",
-                        sem: "-",
-                        grupo: "-",
-                        docente: "-",
-                        debriefing: "-"
-                    }];
-
-                    document.getElementById("ultima-sync").textContent = "⚠ Sin registros para el día de hoy";
-                    document.getElementById("ultima-sync").style.color = "#f59e0b";
-                } else {
-                    // Ordenar cronológicamente
-                    programaDiario.sort((a, b) => {
-                        const iniA = horaAMinutos(a.horario.split('-')[0]);
-                        const iniB = horaAMinutos(b.horario.split('-')[0]);
-                        return iniA - iniB;
-                    });
-
-                    const ahora = new Date();
-                    const horaSync = `${String(ahora.getHours()).padStart(2,'0')}:${String(ahora.getMinutes()).padStart(2,'0')}:${String(ahora.getSeconds()).padStart(2,'0')}`;
-                    document.getElementById("ultima-sync").textContent = `✓ Actualizado ${horaSync}`;
-                    document.getElementById("ultima-sync").style.color = "#34d399";
-                }
-
-                actualizarRelojYEstados();
-
-            } catch (error) {
-                console.error("Error cargando Google Sheets:", error);
-                document.getElementById("ultima-sync").textContent = "⚠ Sin conexión con Google Sheets";
-                document.getElementById("ultima-sync").style.color = "#ef4444";
-            }
+        if (!response.ok) {
+            throw new Error(`Error HTTP: ${response.status}`);
         }
+
+        const datos = await response.json();
+
+        // Buscador ultra-flexible para los nombres exactos de la tabla de tu jefa
+        const obtenerValor = (fila, ...clavesPosibles) => {
+            const claveEncontrada = Object.keys(fila).find(k => {
+                const kLimpia = k.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                return clavesPosibles.some(cp => {
+                    const cpLimpia = cp.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                    return kLimpia === cpLimpia || kLimpia.includes(cpLimpia);
+                });
+            });
+            return claveEncontrada ? String(fila[claveEncontrada]).trim() : "";
+        };
+
+        programaDiario = datos
+            .map(fila => ({
+                horario: obtenerValor(fila, "horario", "hora"),
+                sala: obtenerValor(fila, "sala / lab / consultorio", "sala", "lab"),
+                materia: obtenerValor(fila, "materia", "asignatura"),
+                sem: obtenerValor(fila, "semestre", "sem.", "sem"),
+                grupo: obtenerValor(fila, "grupo", "grp"),
+                docente: obtenerValor(fila, "docente", "profesor"),
+                debriefing: obtenerValor(fila, "aula de debriefing", "debriefing", "debrief")
+            }))
+            // Filtra solo filas válidas que contengan un horario con guion
+            .filter(item => item.horario !== "" && item.horario.includes("-"));
+
+        if (programaDiario.length === 0) {
+            programaDiario = [{
+                horario: "",
+                sala: "",
+                materia: "NO HAY TALLERES PROGRAMADOS PARA HOY",
+                sem: "-",
+                grupo: "-",
+                docente: "-",
+                debriefing: "-"
+            }];
+
+            document.getElementById("ultima-sync").textContent = "⚠ Sin registros para el día de hoy";
+            document.getElementById("ultima-sync").style.color = "#f59e0b";
+        } else {
+            // Ordenar por hora de inicio
+            programaDiario.sort((a, b) => {
+                const iniA = horaAMinutos(a.horario.split(/[-–—]/)[0]);
+                const iniB = horaAMinutos(b.horario.split(/[-–—]/)[0]);
+                return iniA - iniB;
+            });
+
+            const ahora = new Date();
+            const horaSync = `${String(ahora.getHours()).padStart(2,'0')}:${String(ahora.getMinutes()).padStart(2,'0')}:${String(ahora.getSeconds()).padStart(2,'0')}`;
+            document.getElementById("ultima-sync").textContent = `✓ Actualizado ${horaSync}`;
+            document.getElementById("ultima-sync").style.color = "#34d399";
+        }
+
+        actualizarRelojYEstados();
+
+    } catch (error) {
+        console.error("Error cargando Google Sheets:", error);
+        document.getElementById("ultima-sync").textContent = "⚠ Sin conexión con Google Sheets";
+        document.getElementById("ultima-sync").style.color = "#ef4444";
+    }
+}
 
         function actualizarRelojYEstados() {
             const ahora = new Date();
