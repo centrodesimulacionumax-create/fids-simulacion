@@ -1,4 +1,3 @@
-By Dr_Morbe Version a prueba
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -74,14 +73,13 @@ By Dr_Morbe Version a prueba
             font-family: 'Courier New', monospace;
             line-height: 1;
         }
-        	#ultima-sync {
-    		font-size: 0.7rem;
-    		color: #34d399;
-    		margin-top: 2px;
-    		font-weight: 600;
-		}
 
-	
+        #ultima-sync {
+            font-size: 0.7rem;
+            color: #34d399;
+            margin-top: 2px;
+            font-weight: 600;
+        }
 
         /* SECCIONES DE ESTADO */
         .section-header {
@@ -236,7 +234,7 @@ By Dr_Morbe Version a prueba
         <div class="clock-block">
             <div class="date-display" id="fecha-actual">Cargando fecha...</div>
             <div class="clock-display" id="reloj">00:00:00</div>
-	    <div id="ultima-sync"> Sincronizando...</div>	
+            <div id="ultima-sync"> Sincronizando...</div> 
         </div>
     </header>
 
@@ -302,174 +300,100 @@ By Dr_Morbe Version a prueba
 
     <!-- AVISOS GENERALES -->
     <footer>
-        <span class="avisos-label">
-	Avisos Importantes
-	</span>
-	
-	<span
-
-        class="avisos-content"
-	id="avisos-content"
-	></span>
-
+        <span class="avisos-label">Avisos Importantes</span>
+        <span class="avisos-content" id="avisos-content"></span>
     </footer>
 
     <script>
-       	let programaDiario = [
-    {
-        horario: "00:00 - 23:59",
-        sala: "Sistema",
-        materia: "Cargando datos...",
-        sem: "-",
-        grupo: "-",
-        docente: "-",
-        debriefing: "-"
-    }
-];
-const SHEET_ID = "1o0_UwKws4tBBDZFksagYimqkwG-4lr283btRzGeXfOg";
-const SHEET_NAME = "Planificacion";
-       
-
-function horaAMinutos(horaStr) {
-            const [h, m] = horaStr.trim().split(':').map(Number);
-            return h * 60 + m;
-        }
-
-
-async function cargarDatosGoogle() {
-    try {
-        const url = `https://opensheet.elk.sh/${SHEET_ID}/${SHEET_NAME}`;
-        const response = await fetch(url);
-
-        if (!response.ok) {
-            throw new Error("No se pudo acceder a Google Sheets");
-        }
-
-        const datos = await response.json();
-
-        // Función auxiliar para buscar claves sin importar mayúsculas, minúsculas ni espacios
-        const obtenerValor = (fila, ...clavesPosibles) => {
-            const claveEncontrada = Object.keys(fila).find(k => 
-                clavesPosibles.some(cp => k.trim().toLowerCase() === cp.toLowerCase())
-            );
-            return claveEncontrada ? String(fila[claveEncontrada]).trim() : "";
-        };
-
-        programaDiario = datos
-            .map(fila => ({
-                horario: obtenerValor(fila, "HORARIO", "HORARIOS", "HORA"),
-                sala: obtenerValor(fila, "SALA / LAB", "SALA", "LAB", "LABORATORIO"),
-                materia: obtenerValor(fila, "MATERIA", "ASIGNATURA", "CURSO"),
-                sem: obtenerValor(fila, "SEM.", "SEM", "SEMESTRE"),
-                grupo: obtenerValor(fila, "GRUPO", "GRP"),
-                docente: obtenerValor(fila, "DOCENTE", "PROFESOR", "INSTRUCTOR"),
-                debriefing: obtenerValor(fila, "DEBRIEFING", "DEBRIEF")
-            }))
-            .filter(item => item.horario !== ""); // Ignora filas sin horario
-
-        if (programaDiario.length === 0) {
-            programaDiario = [{
-                horario: "",
-                sala: "",
-                materia: "NO HAY TALLERES PROGRAMADOS PARA HOY",
+        let programaDiario = [
+            {
+                horario: "00:00 - 23:59",
+                sala: "Sistema",
+                materia: "Cargando datos...",
                 sem: "-",
                 grupo: "-",
                 docente: "-",
                 debriefing: "-"
-            }];
+            }
+        ];
+        const SHEET_ID = "1o0_UwKws4tBBDZFksagYimqkwG-4lr283btRzGeXfOg";
+        const SHEET_NAME = "Planificacion";
 
-            document.getElementById("ultima-sync").textContent = "⚠ Sin registros para el día de hoy";
-            document.getElementById("ultima-sync").style.color = "#f59e0b";
-        } else {
-            // Ordenar cronológicamente
-            programaDiario.sort((a, b) => {
-                const iniA = horaAMinutos(a.horario.split('-')[0]);
-                const iniB = horaAMinutos(b.horario.split('-')[0]);
-                return iniA - iniB;
-            });
-
-            const ahora = new Date();
-            const horaSync = `${String(ahora.getHours()).padStart(2,'0')}:${String(ahora.getMinutes()).padStart(2,'0')}:${String(ahora.getSeconds()).padStart(2,'0')}`;
-            document.getElementById("ultima-sync").textContent = `✓ Actualizado ${horaSync}`;
-            document.getElementById("ultima-sync").style.color = "#34d399";
+        function horaAMinutos(horaStr) {
+            if (!horaStr) return 0;
+            const partes = horaStr.trim().split(':');
+            if (partes.length < 2) return 0;
+            const h = Number(partes[0]) || 0;
+            const m = Number(partes[1]) || 0;
+            return h * 60 + m;
         }
 
-        actualizarRelojYEstados();
+        async function cargarDatosGoogle() {
+            try {
+                const url = `https://opensheet.elk.sh/${SHEET_ID}/${SHEET_NAME}`;
+                const response = await fetch(url);
 
-    } catch (error) {
-        console.error("Error cargando Google Sheets:", error);
-        document.getElementById("ultima-sync").textContent = "⚠ Sin conexión con Google Sheets";
-        document.getElementById("ultima-sync").style.color = "#ef4444";
-    }
+                if (!response.ok) {
+                    throw new Error("No se pudo acceder a Google Sheets");
+                }
 
-};
+                const datos = await response.json();
 
-if (programaDiario.length === 0) {
+                // Función auxiliar para buscar claves sin importar mayúsculas, minúsculas ni espacios
+                const obtenerValor = (fila, ...clavesPosibles) => {
+                    const claveEncontrada = Object.keys(fila).find(k => 
+                        clavesPosibles.some(cp => k.trim().toLowerCase() === cp.toLowerCase())
+                    );
+                    return claveEncontrada ? String(fila[claveEncontrada]).trim() : "";
+                };
 
-    programaDiario = [{
-        horario: "",
-        sala: "",
-        materia: "NO HAY DATOS DISPONIBLES",
-        sem: "-",
-        grupo: "-",
-        docente: "-",
-        debriefing: "-"
-    }];
+                programaDiario = datos
+                    .map(fila => ({
+                        horario: obtenerValor(fila, "HORARIO", "HORARIOS", "HORA"),
+                        sala: obtenerValor(fila, "SALA / LAB", "SALA", "LAB", "LABORATORIO"),
+                        materia: obtenerValor(fila, "MATERIA", "ASIGNATURA", "CURSO"),
+                        sem: obtenerValor(fila, "SEM.", "SEM", "SEMESTRE"),
+                        grupo: obtenerValor(fila, "GRUPO", "GRP"),
+                        docente: obtenerValor(fila, "DOCENTE", "PROFESOR", "INSTRUCTOR"),
+                        debriefing: obtenerValor(fila, "DEBRIEFING", "DEBRIEF")
+                    }))
+                    .filter(item => item.horario !== ""); // Ignora filas sin horario
 
-    document.getElementById("ultima-sync").textContent =
-        "⚠ Sin registros en Google Sheets";
+                if (programaDiario.length === 0) {
+                    programaDiario = [{
+                        horario: "",
+                        sala: "",
+                        materia: "NO HAY TALLERES PROGRAMADOS PARA HOY",
+                        sem: "-",
+                        grupo: "-",
+                        docente: "-",
+                        debriefing: "-"
+                    }];
 
-    document.getElementById("ultima-sync").style.color =
-        "#f59e0b";
-}
-      
-programaDiario.sort((a,b)=>{
+                    document.getElementById("ultima-sync").textContent = "⚠ Sin registros para el día de hoy";
+                    document.getElementById("ultima-sync").style.color = "#f59e0b";
+                } else {
+                    // Ordenar cronológicamente
+                    programaDiario.sort((a, b) => {
+                        const iniA = horaAMinutos(a.horario.split('-')[0]);
+                        const iniB = horaAMinutos(b.horario.split('-')[0]);
+                        return iniA - iniB;
+                    });
 
-    const iniA =
-        horaAMinutos(
-            a.horario.split('-')[0].trim()
-        );
+                    const ahora = new Date();
+                    const horaSync = `${String(ahora.getHours()).padStart(2,'0')}:${String(ahora.getMinutes()).padStart(2,'0')}:${String(ahora.getSeconds()).padStart(2,'0')}`;
+                    document.getElementById("ultima-sync").textContent = `✓ Actualizado ${horaSync}`;
+                    document.getElementById("ultima-sync").style.color = "#34d399";
+                }
 
-    const iniB =
-        horaAMinutos(
-            b.horario.split('-')[0].trim()
-        );
+                actualizarRelojYEstados();
 
-    return iniA - iniB;
-
-});
-        
-
-        const ahora = new Date();
-
-        const horaSync =
-            `${String(ahora.getHours()).padStart(2,'0')}:` +
-            `${String(ahora.getMinutes()).padStart(2,'0')}:` +
-            `${String(ahora.getSeconds()).padStart(2,'0')}`;
-
-        document.getElementById("ultima-sync").textContent =
-            `✓ Actualizado ${horaSync}`;
-
-        document.getElementById("ultima-sync").style.color =
-            "#34d399";
-
-        actualizarRelojYEstados();
-
-    } catch (error) {
-
-        console.error(
-            "Error cargando Google Sheets:",
-            error
-        );
-
-        document.getElementById("ultima-sync").textContent =
-            "⚠ Sin conexión con Google Sheets";
-
-        document.getElementById("ultima-sync").style.color =
-            "#ef4444";
-    }
-}
-
+            } catch (error) {
+                console.error("Error cargando Google Sheets:", error);
+                document.getElementById("ultima-sync").textContent = "⚠ Sin conexión con Google Sheets";
+                document.getElementById("ultima-sync").style.color = "#ef4444";
+            }
+        }
 
         function actualizarRelojYEstados() {
             const ahora = new Date();
@@ -492,14 +416,14 @@ programaDiario.sort((a,b)=>{
             programaDiario.forEach(clase => {
                 if (!clase.horario) return;
 
-	const [strInicio, strFin] =
-	clase.horario.split('-').map(h => h.trim());
+                const [strInicio, strFin] = clase.horario.split('-').map(h => h.trim());
 
-	const inicioMin = horaAMinutos(strInicio);
-	const finMin = horaAMinutos(strFin);
+                const inicioMin = horaAMinutos(strInicio);
+                const finMin = horaAMinutos(strFin);
 
-	let estado = '';
-	let badgeClass = '';
+                let estado = '';
+                let badgeClass = '';
+
                 if (minutosActuales < inicioMin) {
                     estado = 'PRÓXIMO';
                     badgeClass = 'status-proximo';
@@ -515,25 +439,14 @@ programaDiario.sort((a,b)=>{
                     <tr>
                         <td class="cell-horario">${clase.horario}</td>
                         <td class="cell-sala">${clase.sala}</td>
-
-
-
-                       <!-- <td class="cell-materia">${clase.materia}</td> anule-->
-			<td
-				class="cell-materia"
-				style="color:${colorMateria(clase.materia)}"
-			>
-				${clase.materia}
-			</td>	
+                        <td class="cell-materia" style="color:${colorMateria(clase.materia)}">${clase.materia}</td>
                         <td>${clase.sem}</td>
                         <td><span class="badge-grupo">${clase.grupo}</span></td>
                         <td class="cell-docente">${clase.docente}</td>
                         <td class="cell-debriefing">${clase.debriefing}</td>
                         <td><span class="badge-estado ${badgeClass}">${estado}</span></td>
                     </tr>
-              
-			`;
-
+                `;
 
                 if (estado === 'EN CURSO') htmlEnCurso += filaHTML;
                 else if (estado === 'PRÓXIMO') htmlProximos += filaHTML;
@@ -545,30 +458,21 @@ programaDiario.sort((a,b)=>{
             document.getElementById('tabla-finalizados').innerHTML = htmlFinalizados || '<tr><td colspan="8" class="empty-row">No hay clases finalizadas aún.</td></tr>';
         }
 
+        // Color por especialidad
+        function colorMateria(materia) {
+            if (!materia) return "#f8fafc";
+            const texto = materia
+                .toLowerCase()
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "");
 
+            if (texto.includes("cirugia")) return "#ef4444";
+            if (texto.includes("pediatria")) return "#22c55e";
+            if (texto.includes("medicina")) return "#3b82f6";
+            if (texto.includes("gine")) return "#ec4899";
 
-//Color por especialidad
-	function colorMateria(materia){
-
-    const texto = materia
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "");
-
-    if(texto.includes("cirugia"))
-        return "#ef4444";
-
-    if(texto.includes("pediatria"))
-        return "#22c55e";
-
-    if(texto.includes("medicina"))
-        return "#3b82f6";
-
-    if(texto.includes("gine"))
-        return "#ec4899";
-
-    return "#f8fafc";
-}
+            return "#f8fafc";
+        }
 
         // SISTEMA ANTIRREPOSO DE PANTALLA DE TV
         let wakeLock = null;
@@ -591,36 +495,29 @@ programaDiario.sort((a,b)=>{
                 await activarMantenerPantallaEncendida();
             }
         });
-const avisos = [
-    "Llegar puntualmente a los talleres",
-    "Uso obligatorio de uniforme completo",
-    "No ingresar alimentos o bebidas",
-    "Mantener silencio durante simulaciones"
-];
 
-let avisoActual = 0;
+        const avisos = [
+            "Llegar puntualmente a los talleres",
+            "Uso obligatorio de uniforme completo",
+            "No ingresar alimentos o bebidas",
+            "Mantener silencio durante simulaciones"
+        ];
 
-function actualizarAviso() {
-    document.getElementById("avisos-content").textContent =
-        avisos[avisoActual];
+        let avisoActual = 0;
 
-    avisoActual =
-        (avisoActual + 1) % avisos.length;
-}
+        function actualizarAviso() {
+            document.getElementById("avisos-content").textContent = avisos[avisoActual];
+            avisoActual = (avisoActual + 1) % avisos.length;
+        }
 
+        actualizarAviso();
+        setInterval(actualizarAviso, 10000);
 
-actualizarAviso();
-setInterval(actualizarAviso, 10000);
-
-document.addEventListener
-('click', 
-activarMantenerPantallaEncendida, 
-{ once: true }
-);
+        document.addEventListener('click', activarMantenerPantallaEncendida, { once: true });
 
         setInterval(actualizarRelojYEstados, 1000);
-	cargarDatosGoogle();
-	setInterval(cargarDatosGoogle, 60000);
+        cargarDatosGoogle();
+        setInterval(cargarDatosGoogle, 60000);
         activarMantenerPantallaEncendida();
     </script>
 </body>
