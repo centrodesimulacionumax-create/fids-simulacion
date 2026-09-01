@@ -1,4 +1,5 @@
-By Dr_Morbe
+By Dr_Morbe V 1.1
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -17,19 +18,19 @@ By Dr_Morbe
         html, body {
             width: 100vw;
             height: 100vh;
-            overflow: hidden;
             background-color: #0b0f19;
             color: #ffffff;
         }
 
         body {
-            padding: 1vh 1.5vw;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        /* HEADER */
+    		height: 100vh;
+    		padding: 1vh 1.5vw;
+    		display: flex;
+    		flex-direction: column;
+    		overflow: hidden;
+	}
+        
+	/* HEADER */
         header {
             display: flex;
             justify-content: space-between;
@@ -209,6 +210,27 @@ By Dr_Morbe
             font-size: 0.85rem;
             font-weight: 500;
         }
+	#contenido-scroll {
+    	flex: 1;
+    	overflow-y: auto;
+    	min-height: 0;
+	}
+
+	/* Barra de desplazamiento */
+		
+		#contenido-scroll::-webkit-scrollbar {
+    		width: 10px;
+		}
+
+		#contenido-scroll::-webkit-scrollbar-track {
+    		background: #0f172a;
+		}
+
+		#contenido-scroll::-webkit-scrollbar-thumb {
+    		background: #2563eb;
+    		border-radius: 10px;
+		}
+
 
         .empty-row {
             text-align: center;
@@ -221,10 +243,8 @@ By Dr_Morbe
 </head>
 <body>
 
-    <!-- VIDEO INVISIBLE PARA EVITAR REPOSO EN SMART TV -->
-    <video id="keep-alive-video" loop muted playsinline style="display:none; width:1px; height:1px;">
-        <source src="data:video/mp4;base64,AAAAIGZ0eXBpc29tAAACAGlzb21pc28yYXZjMW1wNDEAAAAIZnJlZQAAAA1tZGF0AAAAAA==" type="video/mp4">
-    </video>
+    <!-- VIDEO Eliminado -->
+
 
     <!-- CABECERA PRINCIPAL -->
     <header>
@@ -239,8 +259,13 @@ By Dr_Morbe
         </div>
     </header>
 
+    <div id="contenido-scroll">
+
+
     <!-- CLASES EN CURSO -->
-    <div class="section-header en-curso-head">
+    
+	<div class="section-header en-curso-head">
+	
         <span>● Clases En Curso</span>
     </div>
     <table>
@@ -298,8 +323,10 @@ By Dr_Morbe
         </thead>
         <tbody id="tabla-finalizados"></tbody>
     </table>
-
-    <!-- AVISOS GENERALES -->
+	 </div>
+    
+<!-- AVISOS GENERALES -->
+ 	
     <footer>
         <span class="avisos-label">Avisos Importantes</span>
         <span class="avisos-content" id="avisos-content"></span>
@@ -479,20 +506,31 @@ By Dr_Morbe
             return "#f8fafc";
         }
 
-        let wakeLock = null;
+        
+ 
+let wakeLock = null;
 
-        async function activarMantenerPantallaEncendida() {
-            try {
-                if ('wakeLock' in navigator) {
-                    wakeLock = await navigator.wakeLock.request('screen');
-                }
-            } catch (err) {}
+async function activarMantenerPantallaEncendida() {
+    try {
+        //console.log("Solicitando Wake Lock...");
 
-            const video = document.getElementById('keep-alive-video');
-            if (video) {
-                video.play().catch(() => {});
-            }
-        }
+        wakeLock = await navigator.wakeLock.request('screen');
+
+        //console.log("✅ Wake Lock obtenido:", wakeLock);
+	
+	wakeLock.addEventListener('release', () => {
+    console.log("⚠ Wake Lock LIBERADO");
+});
+
+
+    } catch (err) {
+
+        console.error("❌ Error Wake Lock:", err.name);
+        console.error("❌ Mensaje:", err.message);
+
+    }
+}
+
 
         document.addEventListener('visibilitychange', async () => {
             if (wakeLock !== null && document.visibilityState === 'visible') {
@@ -523,6 +561,8 @@ By Dr_Morbe
         cargarDatosGoogle();
         setInterval(cargarDatosGoogle, 15000); // Consulta Google Sheets cada 15 segundos
         activarMantenerPantallaEncendida();
+      
+	
     </script>
 </body>
 </html>
