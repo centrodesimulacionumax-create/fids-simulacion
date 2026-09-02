@@ -23,14 +23,14 @@ By Dr_Morbe V 1.1
         }
 
         body {
-    		height: 100vh;
-    		padding: 1vh 1.5vw;
-    		display: flex;
-    		flex-direction: column;
-    		overflow: hidden;
-	}
+            height: 100vh;
+            padding: 1vh 1.5vw;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
         
-	/* HEADER */
+        /* HEADER */
         header {
             display: flex;
             justify-content: space-between;
@@ -210,27 +210,25 @@ By Dr_Morbe V 1.1
             font-size: 0.85rem;
             font-weight: 500;
         }
-	#contenido-scroll {
-    	flex: 1;
-    	overflow-y: auto;
-    	min-height: 0;
-	}
+        #contenido-scroll {
+            flex: 1;
+            overflow-y: auto;
+            min-height: 0;
+        }
 
-	/* Barra de desplazamiento */
-		
-		#contenido-scroll::-webkit-scrollbar {
-    		width: 10px;
-		}
+        /* Barra de desplazamiento */
+        #contenido-scroll::-webkit-scrollbar {
+            width: 10px;
+        }
 
-		#contenido-scroll::-webkit-scrollbar-track {
-    		background: #0f172a;
-		}
+        #contenido-scroll::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
 
-		#contenido-scroll::-webkit-scrollbar-thumb {
-    		background: #2563eb;
-    		border-radius: 10px;
-		}
-
+        #contenido-scroll::-webkit-scrollbar-thumb {
+            background: #2563eb;
+            border-radius: 10px;
+        }
 
         .empty-row {
             text-align: center;
@@ -242,9 +240,6 @@ By Dr_Morbe V 1.1
     </style>
 </head>
 <body>
-
-    <!-- VIDEO Eliminado -->
-
 
     <!-- CABECERA PRINCIPAL -->
     <header>
@@ -261,72 +256,68 @@ By Dr_Morbe V 1.1
 
     <div id="contenido-scroll">
 
+        <!-- CLASES EN CURSO -->
+        <div class="section-header en-curso-head">
+            <span>● Clases En Curso</span>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Horario</th>
+                    <th>Sala / Lab</th>
+                    <th>Materia</th>
+                    <th>Sem.</th>
+                    <th>Grupo</th>
+                    <th>Docente</th>
+                    <th>Debriefing</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody id="tabla-en-curso"></tbody>
+        </table>
 
-    <!-- CLASES EN CURSO -->
+        <!-- PRÓXIMAS CLASES -->
+        <div class="section-header proximo-head">
+            <span>⏳ Próximos Turnos</span>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Horario</th>
+                    <th>Sala / Lab</th>
+                    <th>Materia</th>
+                    <th>Sem.</th>
+                    <th>Grupo</th>
+                    <th>Docente</th>
+                    <th>Debriefing</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody id="tabla-proximos"></tbody>
+        </table>
+
+        <!-- CLASES FINALIZADAS -->
+        <div class="section-header finalizado-head">
+            <span>✓ Clases Finalizadas</span>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Horario</th>
+                    <th>Sala / Lab</th>
+                    <th>Materia</th>
+                    <th>Sem.</th>
+                    <th>Grupo</th>
+                    <th>Docente</th>
+                    <th>Debriefing</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody id="tabla-finalizados"></tbody>
+        </table>
+    </div>
     
-	<div class="section-header en-curso-head">
-	
-        <span>● Clases En Curso</span>
-    </div>
-    <table>
-        <thead>
-            <tr>
-                <th>Horario</th>
-                <th>Sala / Lab</th>
-                <th>Materia</th>
-                <th>Sem.</th>
-                <th>Grupo</th>
-                <th>Docente</th>
-                <th>Debriefing</th>
-                <th>Estado</th>
-            </tr>
-        </thead>
-        <tbody id="tabla-en-curso"></tbody>
-    </table>
-
-    <!-- PRÓXIMAS CLASES -->
-    <div class="section-header proximo-head">
-        <span>⏳ Próximos Turnos</span>
-    </div>
-    <table>
-        <thead>
-            <tr>
-                <th>Horario</th>
-                <th>Sala / Lab</th>
-                <th>Materia</th>
-                <th>Sem.</th>
-                <th>Grupo</th>
-                <th>Docente</th>
-                <th>Debriefing</th>
-                <th>Estado</th>
-            </tr>
-        </thead>
-        <tbody id="tabla-proximos"></tbody>
-    </table>
-
-    <!-- CLASES FINALIZADAS -->
-    <div class="section-header finalizado-head">
-        <span>✓ Clases Finalizadas</span>
-    </div>
-    <table>
-        <thead>
-            <tr>
-                <th>Horario</th>
-                <th>Sala / Lab</th>
-                <th>Materia</th>
-                <th>Sem.</th>
-                <th>Grupo</th>
-                <th>Docente</th>
-                <th>Debriefing</th>
-                <th>Estado</th>
-            </tr>
-        </thead>
-        <tbody id="tabla-finalizados"></tbody>
-    </table>
-	 </div>
-    
-<!-- AVISOS GENERALES -->
- 	
+    <!-- AVISOS GENERALES -->
     <footer>
         <span class="avisos-label">Avisos Importantes</span>
         <span class="avisos-content" id="avisos-content"></span>
@@ -357,76 +348,73 @@ By Dr_Morbe V 1.1
         }
 
         async function cargarDatosGoogle() {
-    try {
-        const url = `https://opensheet.elk.sh/${SHEET_ID}/${SHEET_NAME}`;
-        const response = await fetch(url);
+            try {
+                const url = `https://opensheet.elk.sh/${SHEET_ID}/${SHEET_NAME}`;
+                const response = await fetch(url);
 
-        if (!response.ok) {
-            throw new Error(`Error HTTP: ${response.status}`);
+                if (!response.ok) {
+                    throw new Error(`Error HTTP: ${response.status}`);
+                }
+
+                const datos = await response.json();
+
+                const obtenerValor = (fila, ...clavesPosibles) => {
+                    const claveEncontrada = Object.keys(fila).find(k => {
+                        const kLimpia = k.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                        return clavesPosibles.some(cp => {
+                            const cpLimpia = cp.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                            return kLimpia === cpLimpia || kLimpia.includes(cpLimpia);
+                        });
+                    });
+                    return claveEncontrada ? String(fila[claveEncontrada]).trim() : "";
+                };
+
+                programaDiario = datos
+                    .map(fila => ({
+                        horario: obtenerValor(fila, "horario", "hora"),
+                        sala: obtenerValor(fila, "sala / lab / consultorio", "sala", "lab"),
+                        materia: obtenerValor(fila, "materia", "asignatura"),
+                        sem: obtenerValor(fila, "semestre", "sem.", "sem"),
+                        grupo: obtenerValor(fila, "grupo", "grp"),
+                        docente: obtenerValor(fila, "docente", "profesor"),
+                        debriefing: obtenerValor(fila, "aula de debriefing", "debriefing", "debrief")
+                    }))
+                    .filter(item => item.horario !== "" && item.horario.includes("-"));
+
+                if (programaDiario.length === 0) {
+                    programaDiario = [{
+                        horario: "",
+                        sala: "",
+                        materia: "NO HAY TALLERES PROGRAMADOS PARA HOY",
+                        sem: "-",
+                        grupo: "-",
+                        docente: "-",
+                        debriefing: "-"
+                    }];
+
+                    document.getElementById("ultima-sync").textContent = "⚠ Sin registros para el día de hoy";
+                    document.getElementById("ultima-sync").style.color = "#f59e0b";
+                } else {
+                    programaDiario.sort((a, b) => {
+                        const iniA = horaAMinutos(a.horario.split(/[-–—]/)[0]);
+                        const iniB = horaAMinutos(b.horario.split(/[-–—]/)[0]);
+                        return iniA - iniB;
+                    });
+
+                    const ahora = new Date();
+                    const horaSync = `${String(ahora.getHours()).padStart(2,'0')}:${String(ahora.getMinutes()).padStart(2,'0')}:${String(ahora.getSeconds()).padStart(2,'0')}`;
+                    document.getElementById("ultima-sync").textContent = `✓ Actualizado ${horaSync}`;
+                    document.getElementById("ultima-sync").style.color = "#34d399";
+                }
+
+                actualizarRelojYEstados();
+
+            } catch (error) {
+                console.error("Error cargando Google Sheets:", error);
+                document.getElementById("ultima-sync").textContent = "⚠ Sin conexión con Google Sheets";
+                document.getElementById("ultima-sync").style.color = "#ef4444";
+            }
         }
-
-        const datos = await response.json();
-
-        // Buscador ultra-flexible para los nombres exactos de la tabla de tu jefa
-        const obtenerValor = (fila, ...clavesPosibles) => {
-            const claveEncontrada = Object.keys(fila).find(k => {
-                const kLimpia = k.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-                return clavesPosibles.some(cp => {
-                    const cpLimpia = cp.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-                    return kLimpia === cpLimpia || kLimpia.includes(cpLimpia);
-                });
-            });
-            return claveEncontrada ? String(fila[claveEncontrada]).trim() : "";
-        };
-
-        programaDiario = datos
-            .map(fila => ({
-                horario: obtenerValor(fila, "horario", "hora"),
-                sala: obtenerValor(fila, "sala / lab / consultorio", "sala", "lab"),
-                materia: obtenerValor(fila, "materia", "asignatura"),
-                sem: obtenerValor(fila, "semestre", "sem.", "sem"),
-                grupo: obtenerValor(fila, "grupo", "grp"),
-                docente: obtenerValor(fila, "docente", "profesor"),
-                debriefing: obtenerValor(fila, "aula de debriefing", "debriefing", "debrief")
-            }))
-            // Filtra solo filas válidas que contengan un horario con guion
-            .filter(item => item.horario !== "" && item.horario.includes("-"));
-
-        if (programaDiario.length === 0) {
-            programaDiario = [{
-                horario: "",
-                sala: "",
-                materia: "NO HAY TALLERES PROGRAMADOS PARA HOY",
-                sem: "-",
-                grupo: "-",
-                docente: "-",
-                debriefing: "-"
-            }];
-
-            document.getElementById("ultima-sync").textContent = "⚠ Sin registros para el día de hoy";
-            document.getElementById("ultima-sync").style.color = "#f59e0b";
-        } else {
-            // Ordenar por hora de inicio
-            programaDiario.sort((a, b) => {
-                const iniA = horaAMinutos(a.horario.split(/[-–—]/)[0]);
-                const iniB = horaAMinutos(b.horario.split(/[-–—]/)[0]);
-                return iniA - iniB;
-            });
-
-            const ahora = new Date();
-            const horaSync = `${String(ahora.getHours()).padStart(2,'0')}:${String(ahora.getMinutes()).padStart(2,'0')}:${String(ahora.getSeconds()).padStart(2,'0')}`;
-            document.getElementById("ultima-sync").textContent = `✓ Actualizado ${horaSync}`;
-            document.getElementById("ultima-sync").style.color = "#34d399";
-        }
-
-        actualizarRelojYEstados();
-
-    } catch (error) {
-        console.error("Error cargando Google Sheets:", error);
-        document.getElementById("ultima-sync").textContent = "⚠ Sin conexión con Google Sheets";
-        document.getElementById("ultima-sync").style.color = "#ef4444";
-    }
-}
 
         function actualizarRelojYEstados() {
             const ahora = new Date();
@@ -491,46 +479,43 @@ By Dr_Morbe V 1.1
             document.getElementById('tabla-finalizados').innerHTML = htmlFinalizados || '<tr><td colspan="8" class="empty-row">No hay clases finalizadas aún.</td></tr>';
         }
 
+        /* FUNCIÓN DE COLOR DE MATERIAS ACTUALIZADA */
         function colorMateria(materia) {
             if (!materia) return "#f8fafc";
+            
             const texto = materia
                 .toLowerCase()
                 .normalize("NFD")
                 .replace(/[\u0300-\u036f]/g, "");
 
-            if (texto.includes("cirugia")) return "#ef4444";
-            if (texto.includes("pediatria")) return "#22c55e";
-            if (texto.includes("medicina")) return "#3b82f6";
-            if (texto.includes("gine")) return "#ec4899";
+            // Evaluación de materias específicas (de lo más específico a lo más general)
+            if (texto.includes("semiologia medica 1") || texto.includes("semiologia medica i")) return "#38bdf8"; // Celeste claro
+            if (texto.includes("semiologia medica 2") || texto.includes("semiologia medica ii")) return "#818cf8"; // Azul violeta / Índigo
+            
+            if (texto.includes("semiologia quirurgica 1") || texto.includes("semiologia quirurgica i")) return "#f97316"; // Naranja
+            if (texto.includes("semiologia quirurgica 2") || texto.includes("semiologia quirurgica ii") || texto.includes("semiologia quirurgica")) return "#f43f5e"; // Rosa Intenso / Coral
 
-            return "#f8fafc";
+            if (texto.includes("enfermeria")) return "#a855f7"; // Púrpura brillante
+            if (texto.includes("cirugia")) return "#ef4444"; // Rojo
+            if (texto.includes("pediatria")) return "#22c55e"; // Verde
+            if (texto.includes("gine") || texto.includes("obste")) return "#ec4899"; // Rosado
+            if (texto.includes("medica")) return "#3b82f6"; // Azul
+
+            return "#f8fafc"; // Blanco por defecto
         }
 
-        
- 
-let wakeLock = null;
+        let wakeLock = null;
 
-async function activarMantenerPantallaEncendida() {
-    try {
-        //console.log("Solicitando Wake Lock...");
-
-        wakeLock = await navigator.wakeLock.request('screen');
-
-        //console.log("✅ Wake Lock obtenido:", wakeLock);
-	
-	wakeLock.addEventListener('release', () => {
-    console.log("⚠ Wake Lock LIBERADO");
-});
-
-
-    } catch (err) {
-
-        console.error("❌ Error Wake Lock:", err.name);
-        console.error("❌ Mensaje:", err.message);
-
-    }
-}
-
+        async function activarMantenerPantallaEncendida() {
+            try {
+                wakeLock = await navigator.wakeLock.request('screen');
+                wakeLock.addEventListener('release', () => {
+                    console.log("⚠ Wake Lock LIBERADO");
+                });
+            } catch (err) {
+                console.error("❌ Error Wake Lock:", err.name, err.message);
+            }
+        }
 
         document.addEventListener('visibilitychange', async () => {
             if (wakeLock !== null && document.visibilityState === 'visible') {
@@ -559,10 +544,8 @@ async function activarMantenerPantallaEncendida() {
 
         setInterval(actualizarRelojYEstados, 1000);
         cargarDatosGoogle();
-        setInterval(cargarDatosGoogle, 15000); // Consulta Google Sheets cada 15 segundos
+        setInterval(cargarDatosGoogle, 15000);
         activarMantenerPantallaEncendida();
-      
-	
     </script>
 </body>
 </html>
