@@ -1,4 +1,4 @@
-By Dr_Morbe V 1.1 
+By Dr_Morbe V 1.2
 
 <!DOCTYPE html>
 <html lang="es">
@@ -14,12 +14,12 @@ By Dr_Morbe V 1.1
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
 
-        /* Ocultar barra de desplazamiento en todo el sistema */
         html, body {
             width: 100vw;
             height: 100vh;
             background-color: #0b0f19;
             color: #ffffff;
+            overflow: hidden;
         }
 
         body {
@@ -27,7 +27,6 @@ By Dr_Morbe V 1.1
             padding: 1vh 1.5vw;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
         }
         
         /* HEADER */
@@ -41,6 +40,7 @@ By Dr_Morbe V 1.1
             border-left: 6px solid #f59e0b;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
             height: 11vh;
+            flex-shrink: 0;
         }
 
         .brand-title {
@@ -193,6 +193,7 @@ By Dr_Morbe V 1.1
             align-items: center;
             gap: 12px;
             height: 5vh;
+            flex-shrink: 0;
         }
 
         .avisos-label {
@@ -213,18 +214,15 @@ By Dr_Morbe V 1.1
         
         #contenido-scroll {
             flex: 1;
-            overflow-y: auto;
+            overflow-y: scroll; /* Forzar la barra de desplazamiento */
             min-height: 0;
-            outline: none; /* Remueve el marco predeterminado de foco */
-        }
-
-        #contenido-scroll:focus {
-            box-shadow: inset 0 0 0 2px rgba(56, 189, 248, 0.2); /* Feedback visual suave al estar enfocado */
+            outline: none;
+            -webkit-overflow-scrolling: touch;
         }
 
         /* Barra de desplazamiento */
         #contenido-scroll::-webkit-scrollbar {
-            width: 10px;
+            width: 12px;
         }
 
         #contenido-scroll::-webkit-scrollbar-track {
@@ -260,9 +258,7 @@ By Dr_Morbe V 1.1
         </div>
     </header>
 
-    <!-- Atributo tabindex="0" asignado para habilitar capturar el foco del control remoto -->
     <div id="contenido-scroll" tabindex="0">
-
         <!-- CLASES EN CURSO -->
         <div class="section-header en-curso-head">
             <span>● Clases En Curso</span>
@@ -486,7 +482,6 @@ By Dr_Morbe V 1.1
             document.getElementById('tabla-finalizados').innerHTML = htmlFinalizados || '<tr><td colspan="8" class="empty-row">No hay clases finalizadas aún.</td></tr>';
         }
 
-        /* FUNCIÓN DE COLOR DE MATERIAS ACTUALIZADA */
         function colorMateria(materia) {
             if (!materia) return "#f8fafc";
             
@@ -495,20 +490,17 @@ By Dr_Morbe V 1.1
                 .normalize("NFD")
                 .replace(/[\u0300-\u036f]/g, "");
 
-            // Evaluación de materias específicas (de lo más específico a lo más general)
-            if (texto.includes("semiologia medica 1") || texto.includes("semiologia medica i")) return "#38bdf8"; // Celeste claro
-            if (texto.includes("semiologia medica 2") || texto.includes("semiologia medica ii")) return "#818cf8"; // Azul violeta / Índigo
-            
-            if (texto.includes("semiologia quirurgica 1") || texto.includes("semiologia quirurgica i")) return "#f97316"; // Naranja
-            if (texto.includes("semiologia quirurgica 2") || texto.includes("semiologia quirurgica ii") || texto.includes("semiologia quirurgica")) return "#f43f5e"; // Rosa Intenso / Coral
+            if (texto.includes("semiologia medica 1") || texto.includes("semiologia medica i")) return "#38bdf8";
+            if (texto.includes("semiologia medica 2") || texto.includes("semiologia medica ii")) return "#818cf8";
+            if (texto.includes("semiologia quirurgica 1") || texto.includes("semiologia quirurgica i")) return "#f97316";
+            if (texto.includes("semiologia quirurgica 2") || texto.includes("semiologia quirurgica ii") || texto.includes("semiologia quirurgica")) return "#f43f5e";
+            if (texto.includes("enfermeria")) return "#a855f7";
+            if (texto.includes("cirugia")) return "#ef4444";
+            if (texto.includes("pediatria")) return "#22c55e";
+            if (texto.includes("gine") || texto.includes("obste")) return "#ec4899";
+            if (texto.includes("medica")) return "#3b82f6";
 
-            if (texto.includes("enfermeria")) return "#a855f7"; // Púrpura brillante
-            if (texto.includes("cirugia")) return "#ef4444"; // Rojo
-            if (texto.includes("pediatria")) return "#22c55e"; // Verde
-            if (texto.includes("gine") || texto.includes("obste")) return "#ec4899"; // Rosado
-            if (texto.includes("medica")) return "#3b82f6"; // Azul
-
-            return "#f8fafc"; // Blanco por defecto
+            return "#f8fafc";
         }
 
         let wakeLock = null;
@@ -516,9 +508,6 @@ By Dr_Morbe V 1.1
         async function activarMantenerPantallaEncendida() {
             try {
                 wakeLock = await navigator.wakeLock.request('screen');
-                wakeLock.addEventListener('release', () => {
-                    console.log("⚠ Wake Lock LIBERADO");
-                });
             } catch (err) {
                 console.error("❌ Error Wake Lock:", err.name, err.message);
             }
@@ -547,47 +536,31 @@ By Dr_Morbe V 1.1
         actualizarAviso();
         setInterval(actualizarAviso, 10000);
 
-        /* CONTROL DE NAVEGACIÓN VÍA CONTROL REMOTO / TECLADO */
-        const contenedorScroll = document.getElementById('contenido-scroll');
+        /* SISTEMA DE CONTROL REMOTO MULTI-TV */
+        function manejarScrollTV(e) {
+            const el = document.getElementById('contenido-scroll');
+            if (!el) return;
 
-        function enfocarContenedor() {
-            if (contenedorScroll) {
-                contenedorScroll.focus();
+            // Soporte de KeyCodes extensivos para distintas marcas de TV (LG, Samsung, Android, FireTV)
+            const code = e.keyCode || e.which;
+            const paso = 150; // Distancia del salto en píxeles
+
+            // Teclas de ABAJO: Flecha Abajo (40), CH Down (428/34), FastForward (417)
+            if (code === 40 || code === 428 || code === 34 || code === 417 || e.key === 'ArrowDown') {
+                el.scrollTop += paso; // Desplazamiento directo (100% compatible)
+                e.preventDefault();
+                e.stopPropagation();
+            } 
+            // Teclas de ARRIBA: Flecha Arriba (38), CH Up (427/33), Rewind (412)
+            else if (code === 38 || code === 427 || code === 33 || code === 412 || e.key === 'ArrowUp') {
+                el.scrollTop -= paso;
+                e.preventDefault();
+                e.stopPropagation();
             }
         }
 
-        window.addEventListener('DOMContentLoaded', enfocarContenedor);
-        document.addEventListener('click', () => {
-            activarMantenerPantallaEncendida();
-            enfocarContenedor();
-        }, { once: true });
-
-        document.addEventListener('keydown', (e) => {
-            const pasoScroll = 120; // Píxeles por cada pulsación
-            const tecla = e.key;
-            const codigo = e.keyCode;
-
-            // Soporte para flecha Abajo / Canal- / PageDown
-            if (tecla === 'ArrowDown' || codigo === 40) {
-                contenedorScroll.scrollBy({ top: pasoScroll, behavior: 'smooth' });
-                e.preventDefault();
-            } 
-            // Soporte para flecha Arriba / Canal+ / PageUp
-            else if (tecla === 'ArrowUp' || codigo === 38) {
-                contenedorScroll.scrollBy({ top: -pasoScroll, behavior: 'smooth' });
-                e.preventDefault();
-            } 
-            // Avance rápido de página
-            else if (tecla === 'PageDown' || codigo === 34) {
-                contenedorScroll.scrollBy({ top: contenedorScroll.clientHeight * 0.8, behavior: 'smooth' });
-                e.preventDefault();
-            } 
-            // Retroceso rápido de página
-            else if (tecla === 'PageUp' || codigo === 33) {
-                contenedorScroll.scrollBy({ top: -contenedorScroll.clientHeight * 0.8, behavior: 'smooth' });
-                e.preventDefault();
-            }
-        });
+        // Registrar listener en window en FASE DE CAPTURA (true) para ganarle a la TV
+        window.addEventListener('keydown', manejarScrollTV, true);
 
         setInterval(actualizarRelojYEstados, 1000);
         cargarDatosGoogle();
