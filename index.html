@@ -1,4 +1,4 @@
-By Dr_Morbe V 1.4 - Scroll Solo Manual
+By Dr_Morbe V 1.7 - Pantalla Ampliada & Finalizados 3 Filas
 
 <!DOCTYPE html>
 <html lang="es">
@@ -16,22 +16,21 @@ By Dr_Morbe V 1.4 - Scroll Solo Manual
 
         html, body {
             width: 100%;
-            min-height: 100vh;
+            height: 100vh;
             background-color: #0b0f19;
             color: #ffffff;
+            overflow: hidden;
         }
 
         body {
-            padding: 1vh 1.5vw;
+            padding: 1vw;
             display: flex;
             flex-direction: column;
+            justify-content: space-between;
         }
         
-        /* HEADER - Se mantiene fijo arriba mientras te desplazas */
+        /* HEADER AMPLIADO */
         header {
-            position: sticky;
-            top: 0;
-            z-index: 100;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -40,11 +39,12 @@ By Dr_Morbe V 1.4 - Scroll Solo Manual
             border-radius: 8px;
             border-left: 6px solid #f59e0b;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
-            margin-bottom: 10px;
+            margin-bottom: 8px;
+            flex-shrink: 0;
         }
 
         .brand-title {
-            font-size: 1.6rem;
+            font-size: 1.8rem;
             font-weight: 800;
             letter-spacing: 1px;
             color: #ffffff;
@@ -52,7 +52,7 @@ By Dr_Morbe V 1.4 - Scroll Solo Manual
         }
 
         .brand-subtitle {
-            font-size: 0.85rem;
+            font-size: 0.95rem;
             color: #fbbf24;
             font-weight: 600;
         }
@@ -62,14 +62,14 @@ By Dr_Morbe V 1.4 - Scroll Solo Manual
         }
 
         .date-display {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             color: #9ca3af;
             font-weight: 600;
             text-transform: uppercase;
         }
 
         .clock-display {
-            font-size: 1.8rem;
+            font-size: 2rem;
             font-weight: 700;
             color: #38bdf8;
             font-family: 'Courier New', monospace;
@@ -77,10 +77,19 @@ By Dr_Morbe V 1.4 - Scroll Solo Manual
         }
 
         #ultima-sync {
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             color: #34d399;
             margin-top: 2px;
             font-weight: 600;
+        }
+
+        /* CONTENEDOR PRINCIPAL FLEXIBLE */
+        main {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            gap: 6px;
+            overflow: hidden;
         }
 
         /* SECCIONES DE ESTADO */
@@ -88,36 +97,37 @@ By Dr_Morbe V 1.4 - Scroll Solo Manual
             display: flex;
             align-items: center;
             background-color: #1e293b;
-            padding: 0.6vh 1vw;
-            font-size: 0.9rem;
+            padding: 0.5vh 1vw;
+            font-size: 0.95rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1px;
             border-radius: 6px;
-            margin-top: 10px;
-            margin-bottom: 6px;
+            flex-shrink: 0;
         }
 
         .section-header.en-curso-head { border-left: 5px solid #10b981; color: #34d399; }
         .section-header.proximo-head { border-left: 5px solid #3b82f6; color: #60a5fa; }
         .section-header.finalizado-head { border-left: 5px solid #64748b; color: #94a3b8; }
 
-        /* TABLAS COMPACTAS */
+        /* TABLAS AMPLIADAS */
         table {
             width: 100%;
             border-collapse: separate;
             border-spacing: 0 3px;
-            margin-bottom: 10px;
         }
 
         th {
             background-color: #0f172a;
-            color: #64748b;
-            padding: 0.6vh 0.6vw;
+            color: #94a3b8;
+            padding: 0.6vh 0.8vw;
             text-align: left;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             text-transform: uppercase;
             font-weight: 700;
+            position: sticky;
+            top: 0;
+            z-index: 10;
         }
 
         tbody tr {
@@ -125,8 +135,8 @@ By Dr_Morbe V 1.4 - Scroll Solo Manual
         }
 
         td {
-            padding: 0.6vh 0.6vw;
-            font-size: 0.85rem;
+            padding: 0.6vh 0.8vw;
+            font-size: 0.95rem;
             border-top: 1px solid #334155;
             border-bottom: 1px solid #334155;
             white-space: nowrap;
@@ -141,7 +151,7 @@ By Dr_Morbe V 1.4 - Scroll Solo Manual
             color: #38bdf8;
             font-weight: 700;
             font-family: monospace;
-            font-size: 0.88rem;
+            font-size: 1rem;
         }
 
         .cell-sala { color: #ffffff; font-weight: 700; }
@@ -152,16 +162,16 @@ By Dr_Morbe V 1.4 - Scroll Solo Manual
         .badge-grupo {
             background-color: #334155;
             color: #f8fafc;
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.85rem;
             font-weight: 700;
         }
 
         .badge-estado {
-            padding: 2px 8px;
-            border-radius: 3px;
-            font-size: 0.75rem;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
             font-weight: 800;
             text-transform: uppercase;
         }
@@ -182,11 +192,39 @@ By Dr_Morbe V 1.4 - Scroll Solo Manual
             100% { opacity: 1; }
         }
 
+        /* CONTENEDORES DE SCROLL INTERNO */
+        .contenedor-proximos {
+            flex-grow: 1;
+            overflow-y: auto;
+            border-radius: 4px;
+        }
+
+        /* EXACTAMENTE 3 FILAS VISIBLES + ENCABEZADO */
+        .contenedor-finalizados {
+            height: 155px; /* Altura fija calculada para mostrar exactamente 3 filas */
+            max-height: 155px;
+            overflow-y: auto;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+
+        /* BARRAS DE SCROLL */
+        .contenedor-proximos::-webkit-scrollbar,
+        .contenedor-finalizados::-webkit-scrollbar {
+            width: 8px;
+        }
+        .contenedor-proximos::-webkit-scrollbar-track,
+        .contenedor-finalizados::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        .contenedor-proximos::-webkit-scrollbar-thumb,
+        .contenedor-finalizados::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 4px;
+        }
+
         /* BANNER DE AVISOS */
         footer {
-            position: sticky;
-            bottom: 0;
-            z-index: 100;
             background: #1e293b;
             border: 1px solid #334155;
             border-left: 5px solid #f59e0b;
@@ -195,7 +233,8 @@ By Dr_Morbe V 1.4 - Scroll Solo Manual
             display: flex;
             align-items: center;
             gap: 12px;
-            margin-top: auto;
+            margin-top: 6px;
+            flex-shrink: 0;
         }
 
         .avisos-label {
@@ -203,23 +242,23 @@ By Dr_Morbe V 1.4 - Scroll Solo Manual
             color: #0f172a;
             font-weight: 800;
             padding: 2px 8px;
-            border-radius: 3px;
-            font-size: 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
             text-transform: uppercase;
         }
 
         .avisos-content {
             color: #f1f5f9;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             font-weight: 500;
         }
 
         .empty-row {
             text-align: center;
             color: #64748b;
-            padding: 8px;
+            padding: 10px;
             font-style: italic;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
         }
     </style>
 </head>
@@ -263,41 +302,45 @@ By Dr_Morbe V 1.4 - Scroll Solo Manual
         <div class="section-header proximo-head">
             <span>⏳ Próximos Turnos</span>
         </div>
-        <table>
-            <thead>
-                <tr>
-                    <th>Horario</th>
-                    <th>Sala / Lab</th>
-                    <th>Materia</th>
-                    <th>Sem.</th>
-                    <th>Grupo</th>
-                    <th>Docente</th>
-                    <th>Debriefing</th>
-                    <th>Estado</th>
-                </tr>
-            </thead>
-            <tbody id="tabla-proximos"></tbody>
-        </table>
+        <div class="contenedor-proximos" id="box-proximos">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Horario</th>
+                        <th>Sala / Lab</th>
+                        <th>Materia</th>
+                        <th>Sem.</th>
+                        <th>Grupo</th>
+                        <th>Docente</th>
+                        <th>Debriefing</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-proximos"></tbody>
+            </table>
+        </div>
 
-        <!-- CLASES FINALIZADAS -->
+        <!-- CLASES FINALIZADAS (3 FILAS VISIBLES) -->
         <div class="section-header finalizado-head">
             <span>✓ Clases Finalizadas</span>
         </div>
-        <table>
-            <thead>
-                <tr>
-                    <th>Horario</th>
-                    <th>Sala / Lab</th>
-                    <th>Materia</th>
-                    <th>Sem.</th>
-                    <th>Grupo</th>
-                    <th>Docente</th>
-                    <th>Debriefing</th>
-                    <th>Estado</th>
-                </tr>
-            </thead>
-            <tbody id="tabla-finalizados"></tbody>
-        </table>
+        <div class="contenedor-finalizados" id="box-finalizados">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Horario</th>
+                        <th>Sala / Lab</th>
+                        <th>Materia</th>
+                        <th>Sem.</th>
+                        <th>Grupo</th>
+                        <th>Docente</th>
+                        <th>Debriefing</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-finalizados"></tbody>
+            </table>
+        </div>
     </main>
     
     <!-- AVISOS GENERALES -->
@@ -461,31 +504,31 @@ By Dr_Morbe V 1.4 - Scroll Solo Manual
         actualizarAviso();
         setInterval(actualizarAviso, 10000);
 
-        /* === CONTROL DE DESPLAZAMIENTO 100% MANUAL === */
-
-        function moverPantalla(pixeles) {
-            window.scrollBy(0, pixeles);
-            document.documentElement.scrollTop += pixeles;
-            document.body.scrollTop += pixeles;
-        }
-
+        /* MANDO TV SCROLL */
         function capturarMandoTV(e) {
             const code = e.keyCode || e.which;
-            const paso = 180;
+            const paso = 100;
+            const boxProximos = document.getElementById('box-proximos');
+            const boxFinalizados = document.getElementById('box-finalizados');
 
-            // Teclas Abajo (Flecha Abajo, CH-, PageDown)
             if ([40, 428, 34, 417, 20].includes(code) || e.key === 'ArrowDown') {
-                moverPantalla(paso);
+                if (boxProximos && (boxProximos.scrollTop + boxProximos.clientHeight < boxProximos.scrollHeight)) {
+                    boxProximos.scrollTop += paso;
+                } else if (boxFinalizados && (boxFinalizados.scrollTop + boxFinalizados.clientHeight < boxFinalizados.scrollHeight)) {
+                    boxFinalizados.scrollTop += paso;
+                }
                 e.preventDefault();
             } 
-            // Teclas Arriba (Flecha Arriba, CH+, PageUp)
             else if ([38, 427, 33, 412, 19].includes(code) || e.key === 'ArrowUp') {
-                moverPantalla(-paso);
+                if (boxFinalizados && boxFinalizados.scrollTop > 0) {
+                    boxFinalizados.scrollTop -= paso;
+                } else if (boxProximos && boxProximos.scrollTop > 0) {
+                    boxProximos.scrollTop -= paso;
+                }
                 e.preventDefault();
             }
         }
 
-        // Registrar captura manual
         window.addEventListener('keydown', capturarMandoTV, true);
         document.addEventListener('keydown', capturarMandoTV, true);
 
