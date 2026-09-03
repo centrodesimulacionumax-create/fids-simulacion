@@ -1,4 +1,4 @@
-By Dr_Morbe V 1.2
+By Dr_Morbe V 1.3 - TV Scroll Fix
 
 <!DOCTYPE html>
 <html lang="es">
@@ -15,22 +15,23 @@ By Dr_Morbe V 1.2
         }
 
         html, body {
-            width: 100vw;
-            height: 100vh;
+            width: 100%;
+            min-height: 100vh;
             background-color: #0b0f19;
             color: #ffffff;
-            overflow: hidden;
         }
 
         body {
-            height: 100vh;
             padding: 1vh 1.5vw;
             display: flex;
             flex-direction: column;
         }
         
-        /* HEADER */
+        /* HEADER FIX - Sticky para mantenerse visible al deslizar */
         header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -38,9 +39,8 @@ By Dr_Morbe V 1.2
             padding: 1vh 1.5vw;
             border-radius: 8px;
             border-left: 6px solid #f59e0b;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
-            height: 11vh;
-            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
+            margin-bottom: 10px;
         }
 
         .brand-title {
@@ -88,15 +88,14 @@ By Dr_Morbe V 1.2
             display: flex;
             align-items: center;
             background-color: #1e293b;
-            padding: 0.5vh 1vw;
+            padding: 0.6vh 1vw;
             font-size: 0.9rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1px;
             border-radius: 6px;
-            margin-top: 0.8vh;
-            margin-bottom: 0.4vh;
-            height: 3.5vh;
+            margin-top: 10px;
+            margin-bottom: 6px;
         }
 
         .section-header.en-curso-head { border-left: 5px solid #10b981; color: #34d399; }
@@ -107,13 +106,14 @@ By Dr_Morbe V 1.2
         table {
             width: 100%;
             border-collapse: separate;
-            border-spacing: 0 2px;
+            border-spacing: 0 3px;
+            margin-bottom: 10px;
         }
 
         th {
             background-color: #0f172a;
             color: #64748b;
-            padding: 0.4vh 0.6vw;
+            padding: 0.6vh 0.6vw;
             text-align: left;
             font-size: 0.75rem;
             text-transform: uppercase;
@@ -125,8 +125,8 @@ By Dr_Morbe V 1.2
         }
 
         td {
-            padding: 0.4vh 0.6vw;
-            font-size: 0.82rem;
+            padding: 0.6vh 0.6vw;
+            font-size: 0.85rem;
             border-top: 1px solid #334155;
             border-bottom: 1px solid #334155;
             white-space: nowrap;
@@ -184,16 +184,18 @@ By Dr_Morbe V 1.2
 
         /* BANNER DE AVISOS */
         footer {
+            position: sticky;
+            bottom: 0;
+            z-index: 100;
             background: #1e293b;
             border: 1px solid #334155;
             border-left: 5px solid #f59e0b;
             border-radius: 6px;
-            padding: 0.5vh 1vw;
+            padding: 0.6vh 1vw;
             display: flex;
             align-items: center;
             gap: 12px;
-            height: 5vh;
-            flex-shrink: 0;
+            margin-top: auto;
         }
 
         .avisos-label {
@@ -211,39 +213,17 @@ By Dr_Morbe V 1.2
             font-size: 0.85rem;
             font-weight: 500;
         }
-        
-        #contenido-scroll {
-            flex: 1;
-            overflow-y: scroll; /* Forzar la barra de desplazamiento */
-            min-height: 0;
-            outline: none;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        /* Barra de desplazamiento */
-        #contenido-scroll::-webkit-scrollbar {
-            width: 12px;
-        }
-
-        #contenido-scroll::-webkit-scrollbar-track {
-            background: #0f172a;
-        }
-
-        #contenido-scroll::-webkit-scrollbar-thumb {
-            background: #2563eb;
-            border-radius: 10px;
-        }
 
         .empty-row {
             text-align: center;
             color: #64748b;
-            padding: 6px;
+            padding: 8px;
             font-style: italic;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
         }
     </style>
 </head>
-<body>
+<body id="cuerpo-pagina" tabindex="0">
 
     <!-- CABECERA PRINCIPAL -->
     <header>
@@ -258,7 +238,7 @@ By Dr_Morbe V 1.2
         </div>
     </header>
 
-    <div id="contenido-scroll" tabindex="0">
+    <main id="contenido-principal">
         <!-- CLASES EN CURSO -->
         <div class="section-header en-curso-head">
             <span>● Clases En Curso</span>
@@ -318,7 +298,7 @@ By Dr_Morbe V 1.2
             </thead>
             <tbody id="tabla-finalizados"></tbody>
         </table>
-    </div>
+    </main>
     
     <!-- AVISOS GENERALES -->
     <footer>
@@ -327,17 +307,7 @@ By Dr_Morbe V 1.2
     </footer>
 
     <script>
-        let programaDiario = [
-            {
-                horario: "00:00 - 23:59",
-                sala: "Sistema",
-                materia: "Cargando datos...",
-                sem: "-",
-                grupo: "-",
-                docente: "-",
-                debriefing: "-"
-            }
-        ];
+        let programaDiario = [];
         const SHEET_ID = "1o0_UwKws4tBBDZFksagYimqkwG-4lr283btRzGeXfOg";
         const SHEET_NAME = "Planificacion";
 
@@ -345,19 +315,14 @@ By Dr_Morbe V 1.2
             if (!horaStr) return 0;
             const partes = horaStr.trim().split(':');
             if (partes.length < 2) return 0;
-            const h = Number(partes[0]) || 0;
-            const m = Number(partes[1]) || 0;
-            return h * 60 + m;
+            return (Number(partes[0]) || 0) * 60 + (Number(partes[1]) || 0);
         }
 
         async function cargarDatosGoogle() {
             try {
                 const url = `https://opensheet.elk.sh/${SHEET_ID}/${SHEET_NAME}`;
                 const response = await fetch(url);
-
-                if (!response.ok) {
-                    throw new Error(`Error HTTP: ${response.status}`);
-                }
+                if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
 
                 const datos = await response.json();
 
@@ -386,16 +351,10 @@ By Dr_Morbe V 1.2
 
                 if (programaDiario.length === 0) {
                     programaDiario = [{
-                        horario: "",
-                        sala: "",
-                        materia: "NO HAY TALLERES PROGRAMADOS PARA HOY",
-                        sem: "-",
-                        grupo: "-",
-                        docente: "-",
-                        debriefing: "-"
+                        horario: "", sala: "", materia: "NO HAY TALLERES PROGRAMADOS PARA HOY",
+                        sem: "-", grupo: "-", docente: "-", debriefing: "-"
                     }];
-
-                    document.getElementById("ultima-sync").textContent = "⚠ Sin registros para el día de hoy";
+                    document.getElementById("ultima-sync").textContent = "⚠ Sin registros para el día";
                     document.getElementById("ultima-sync").style.color = "#f59e0b";
                 } else {
                     programaDiario.sort((a, b) => {
@@ -414,49 +373,37 @@ By Dr_Morbe V 1.2
 
             } catch (error) {
                 console.error("Error cargando Google Sheets:", error);
-                document.getElementById("ultima-sync").textContent = "⚠ Sin conexión con Google Sheets";
+                document.getElementById("ultima-sync").textContent = "⚠ Sin conexión";
                 document.getElementById("ultima-sync").style.color = "#ef4444";
             }
         }
 
         function actualizarRelojYEstados() {
             const ahora = new Date();
-            
-            const horas = String(ahora.getHours()).padStart(2, '0');
-            const minutos = String(ahora.getMinutes()).padStart(2, '0');
-            const segundos = String(ahora.getSeconds()).padStart(2, '0');
-            document.getElementById('reloj').textContent = `${horas}:${minutos}:${segundos}`;
+            document.getElementById('reloj').textContent = `${String(ahora.getHours()).padStart(2, '0')}:${String(ahora.getMinutes()).padStart(2, '0')}:${String(ahora.getSeconds()).padStart(2, '0')}`;
 
             const opcionesFecha = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'};
-            const fechaFormateada = ahora.toLocaleDateString('es-ES', opcionesFecha);
-            document.getElementById('fecha-actual').textContent = fechaFormateada.toUpperCase();
+            document.getElementById('fecha-actual').textContent = ahora.toLocaleDateString('es-ES', opcionesFecha).toUpperCase();
 
             const minutosActuales = ahora.getHours() * 60 + ahora.getMinutes();
 
-            let htmlEnCurso = '';
-            let htmlProximos = '';
-            let htmlFinalizados = '';
+            let htmlEnCurso = '', htmlProximos = '', htmlFinalizados = '';
 
             programaDiario.forEach(clase => {
                 if (!clase.horario) return;
 
                 const [strInicio, strFin] = clase.horario.split('-').map(h => h.trim());
-
                 const inicioMin = horaAMinutos(strInicio);
                 const finMin = horaAMinutos(strFin);
 
-                let estado = '';
-                let badgeClass = '';
+                let estado = '', badgeClass = '';
 
                 if (minutosActuales < inicioMin) {
-                    estado = 'PRÓXIMO';
-                    badgeClass = 'status-proximo';
+                    estado = 'PRÓXIMO'; badgeClass = 'status-proximo';
                 } else if (minutosActuales >= inicioMin && minutosActuales < finMin) {
-                    estado = 'EN CURSO';
-                    badgeClass = 'status-en-curso';
+                    estado = 'EN CURSO'; badgeClass = 'status-en-curso';
                 } else {
-                    estado = 'FINALIZADO';
-                    badgeClass = 'status-finalizado';
+                    estado = 'FINALIZADO'; badgeClass = 'status-finalizado';
                 }
 
                 const filaHTML = `
@@ -484,11 +431,7 @@ By Dr_Morbe V 1.2
 
         function colorMateria(materia) {
             if (!materia) return "#f8fafc";
-            
-            const texto = materia
-                .toLowerCase()
-                .normalize("NFD")
-                .replace(/[\u0300-\u036f]/g, "");
+            const texto = materia.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
             if (texto.includes("semiologia medica 1") || texto.includes("semiologia medica i")) return "#38bdf8";
             if (texto.includes("semiologia medica 2") || texto.includes("semiologia medica ii")) return "#818cf8";
@@ -503,69 +446,93 @@ By Dr_Morbe V 1.2
             return "#f8fafc";
         }
 
-        let wakeLock = null;
-
-        async function activarMantenerPantallaEncendida() {
-            try {
-                wakeLock = await navigator.wakeLock.request('screen');
-            } catch (err) {
-                console.error("❌ Error Wake Lock:", err.name, err.message);
-            }
-        }
-
-        document.addEventListener('visibilitychange', async () => {
-            if (wakeLock !== null && document.visibilityState === 'visible') {
-                await activarMantenerPantallaEncendida();
-            }
-        });
-
+        /* BANNER AVISOS */
         const avisos = [
             "Llegar puntualmente a los talleres",
             "Uso obligatorio de uniforme completo",
             "No ingresar alimentos o bebidas",
             "Mantener silencio durante simulaciones"
         ];
-
         let avisoActual = 0;
-
         function actualizarAviso() {
             document.getElementById("avisos-content").textContent = avisos[avisoActual];
             avisoActual = (avisoActual + 1) % avisos.length;
         }
-
         actualizarAviso();
         setInterval(actualizarAviso, 10000);
 
-        /* SISTEMA DE CONTROL REMOTO MULTI-TV */
-        function manejarScrollTV(e) {
-            const el = document.getElementById('contenido-scroll');
-            if (!el) return;
+        /* === SISTEMA DE SCROLL MULTI-MÉTODO PARA SMART TV === */
 
-            // Soporte de KeyCodes extensivos para distintas marcas de TV (LG, Samsung, Android, FireTV)
+        // 1. SCROLL MANUAL DESDE MANDO A DISTANCIA (Directo en Window/Document)
+        function moverPantalla(pixeles) {
+            window.scrollBy(0, pixeles);
+            document.documentElement.scrollTop += pixeles;
+            document.body.scrollTop += pixeles;
+        }
+
+        function capturarMandoTV(e) {
             const code = e.keyCode || e.which;
-            const paso = 150; // Distancia del salto en píxeles
+            const paso = 180;
 
-            // Teclas de ABAJO: Flecha Abajo (40), CH Down (428/34), FastForward (417)
-            if (code === 40 || code === 428 || code === 34 || code === 417 || e.key === 'ArrowDown') {
-                el.scrollTop += paso; // Desplazamiento directo (100% compatible)
+            // Abajo / CH- / PageDown / FastForward
+            if ([40, 428, 34, 417, 20].includes(code) || e.key === 'ArrowDown') {
+                moverPantalla(paso);
                 e.preventDefault();
-                e.stopPropagation();
             } 
-            // Teclas de ARRIBA: Flecha Arriba (38), CH Up (427/33), Rewind (412)
-            else if (code === 38 || code === 427 || code === 33 || code === 412 || e.key === 'ArrowUp') {
-                el.scrollTop -= paso;
+            // Arriba / CH+ / PageUp / Rewind
+            else if ([38, 427, 33, 412, 19].includes(code) || e.key === 'ArrowUp') {
+                moverPantalla(-paso);
                 e.preventDefault();
-                e.stopPropagation();
             }
         }
 
-        // Registrar listener en window en FASE DE CAPTURA (true) para ganarle a la TV
-        window.addEventListener('keydown', manejarScrollTV, true);
+        window.addEventListener('keydown', capturarMandoTV, true);
+        document.addEventListener('keydown', capturarMandoTV, true);
+
+        // 2. AUTO-SCROLL AUTOMÁTICO (Ideal para TV FIDS en espera)
+        let direccionScroll = 1;
+        let velocidadScroll = 1; // Píxeles por paso
+        let pausaAutoScroll = false;
+
+        function autoScrollLoop() {
+            if (!pausaAutoScroll) {
+                const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+                
+                if (maxScroll > 0) {
+                    if (window.scrollY >= maxScroll - 5) {
+                        // Al llegar al final, espera 4 segundos y regresa arriba
+                        pausaAutoScroll = true;
+                        setTimeout(() => {
+                            window.scrollTo(0, 0);
+                            pausaAutoScroll = false;
+                        }, 4000);
+                    } else {
+                        window.scrollBy(0, velocidadScroll);
+                    }
+                }
+            }
+        }
+
+        // Ejecutar scroll automático continuo cada 40ms
+        setInterval(autoScrollLoop, 40);
+
+        // Si el usuario toca el mando, pausar el autoscroll 10 segundos
+        window.addEventListener('keydown', () => {
+            pausaAutoScroll = true;
+            clearTimeout(window.timerPausaTV);
+            window.timerPausaTV = setTimeout(() => {
+                pausaAutoScroll = false;
+            }, 10000);
+        }, true);
+
+        // Forzar el foco inicial de la pantalla
+        window.onload = () => {
+            document.body.focus();
+            cargarDatosGoogle();
+        };
 
         setInterval(actualizarRelojYEstados, 1000);
-        cargarDatosGoogle();
         setInterval(cargarDatosGoogle, 15000);
-        activarMantenerPantallaEncendida();
     </script>
 </body>
 </html>
