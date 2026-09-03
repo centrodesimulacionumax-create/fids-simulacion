@@ -1,4 +1,4 @@
-By Dr_Morbe V 1.3 - TV Scroll Fix
+By Dr_Morbe V 1.4 - Scroll Solo Manual
 
 <!DOCTYPE html>
 <html lang="es">
@@ -27,7 +27,7 @@ By Dr_Morbe V 1.3 - TV Scroll Fix
             flex-direction: column;
         }
         
-        /* HEADER FIX - Sticky para mantenerse visible al deslizar */
+        /* HEADER - Se mantiene fijo arriba mientras te desplazas */
         header {
             position: sticky;
             top: 0;
@@ -102,7 +102,7 @@ By Dr_Morbe V 1.3 - TV Scroll Fix
         .section-header.proximo-head { border-left: 5px solid #3b82f6; color: #60a5fa; }
         .section-header.finalizado-head { border-left: 5px solid #64748b; color: #94a3b8; }
 
-        /* TABLAS FIDS COMPACTAS */
+        /* TABLAS COMPACTAS */
         table {
             width: 100%;
             border-collapse: separate;
@@ -461,9 +461,8 @@ By Dr_Morbe V 1.3 - TV Scroll Fix
         actualizarAviso();
         setInterval(actualizarAviso, 10000);
 
-        /* === SISTEMA DE SCROLL MULTI-MÉTODO PARA SMART TV === */
+        /* === CONTROL DE DESPLAZAMIENTO 100% MANUAL === */
 
-        // 1. SCROLL MANUAL DESDE MANDO A DISTANCIA (Directo en Window/Document)
         function moverPantalla(pixeles) {
             window.scrollBy(0, pixeles);
             document.documentElement.scrollTop += pixeles;
@@ -474,58 +473,22 @@ By Dr_Morbe V 1.3 - TV Scroll Fix
             const code = e.keyCode || e.which;
             const paso = 180;
 
-            // Abajo / CH- / PageDown / FastForward
+            // Teclas Abajo (Flecha Abajo, CH-, PageDown)
             if ([40, 428, 34, 417, 20].includes(code) || e.key === 'ArrowDown') {
                 moverPantalla(paso);
                 e.preventDefault();
             } 
-            // Arriba / CH+ / PageUp / Rewind
+            // Teclas Arriba (Flecha Arriba, CH+, PageUp)
             else if ([38, 427, 33, 412, 19].includes(code) || e.key === 'ArrowUp') {
                 moverPantalla(-paso);
                 e.preventDefault();
             }
         }
 
+        // Registrar captura manual
         window.addEventListener('keydown', capturarMandoTV, true);
         document.addEventListener('keydown', capturarMandoTV, true);
 
-        // 2. AUTO-SCROLL AUTOMÁTICO (Ideal para TV FIDS en espera)
-        let direccionScroll = 1;
-        let velocidadScroll = 1; // Píxeles por paso
-        let pausaAutoScroll = false;
-
-        function autoScrollLoop() {
-            if (!pausaAutoScroll) {
-                const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-                
-                if (maxScroll > 0) {
-                    if (window.scrollY >= maxScroll - 5) {
-                        // Al llegar al final, espera 4 segundos y regresa arriba
-                        pausaAutoScroll = true;
-                        setTimeout(() => {
-                            window.scrollTo(0, 0);
-                            pausaAutoScroll = false;
-                        }, 4000);
-                    } else {
-                        window.scrollBy(0, velocidadScroll);
-                    }
-                }
-            }
-        }
-
-        // Ejecutar scroll automático continuo cada 40ms
-        setInterval(autoScrollLoop, 40);
-
-        // Si el usuario toca el mando, pausar el autoscroll 10 segundos
-        window.addEventListener('keydown', () => {
-            pausaAutoScroll = true;
-            clearTimeout(window.timerPausaTV);
-            window.timerPausaTV = setTimeout(() => {
-                pausaAutoScroll = false;
-            }, 10000);
-        }, true);
-
-        // Forzar el foco inicial de la pantalla
         window.onload = () => {
             document.body.focus();
             cargarDatosGoogle();
