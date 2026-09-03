@@ -1,4 +1,4 @@
-By Dr_Morbe V 1.7 - Pantalla Ampliada & Finalizados 3 Filas
+By Dr_Morbe V 1.1 
 
 <!DOCTYPE html>
 <html lang="es">
@@ -14,22 +14,23 @@ By Dr_Morbe V 1.7 - Pantalla Ampliada & Finalizados 3 Filas
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
 
+        /* Ocultar barra de desplazamiento en todo el sistema */
         html, body {
-            width: 100%;
+            width: 100vw;
             height: 100vh;
             background-color: #0b0f19;
             color: #ffffff;
-            overflow: hidden;
         }
 
         body {
-            padding: 1vw;
+            height: 100vh;
+            padding: 1vh 1.5vw;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            overflow: hidden;
         }
         
-        /* HEADER AMPLIADO */
+        /* HEADER */
         header {
             display: flex;
             justify-content: space-between;
@@ -38,13 +39,12 @@ By Dr_Morbe V 1.7 - Pantalla Ampliada & Finalizados 3 Filas
             padding: 1vh 1.5vw;
             border-radius: 8px;
             border-left: 6px solid #f59e0b;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
-            margin-bottom: 8px;
-            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+            height: 11vh;
         }
 
         .brand-title {
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             font-weight: 800;
             letter-spacing: 1px;
             color: #ffffff;
@@ -52,7 +52,7 @@ By Dr_Morbe V 1.7 - Pantalla Ampliada & Finalizados 3 Filas
         }
 
         .brand-subtitle {
-            font-size: 0.95rem;
+            font-size: 0.85rem;
             color: #fbbf24;
             font-weight: 600;
         }
@@ -62,14 +62,14 @@ By Dr_Morbe V 1.7 - Pantalla Ampliada & Finalizados 3 Filas
         }
 
         .date-display {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: #9ca3af;
             font-weight: 600;
             text-transform: uppercase;
         }
 
         .clock-display {
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-weight: 700;
             color: #38bdf8;
             font-family: 'Courier New', monospace;
@@ -77,19 +77,10 @@ By Dr_Morbe V 1.7 - Pantalla Ampliada & Finalizados 3 Filas
         }
 
         #ultima-sync {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: #34d399;
             margin-top: 2px;
             font-weight: 600;
-        }
-
-        /* CONTENEDOR PRINCIPAL FLEXIBLE */
-        main {
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
-            gap: 6px;
-            overflow: hidden;
         }
 
         /* SECCIONES DE ESTADO */
@@ -98,36 +89,35 @@ By Dr_Morbe V 1.7 - Pantalla Ampliada & Finalizados 3 Filas
             align-items: center;
             background-color: #1e293b;
             padding: 0.5vh 1vw;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1px;
             border-radius: 6px;
-            flex-shrink: 0;
+            margin-top: 0.8vh;
+            margin-bottom: 0.4vh;
+            height: 3.5vh;
         }
 
         .section-header.en-curso-head { border-left: 5px solid #10b981; color: #34d399; }
         .section-header.proximo-head { border-left: 5px solid #3b82f6; color: #60a5fa; }
         .section-header.finalizado-head { border-left: 5px solid #64748b; color: #94a3b8; }
 
-        /* TABLAS AMPLIADAS */
+        /* TABLAS FIDS COMPACTAS */
         table {
             width: 100%;
             border-collapse: separate;
-            border-spacing: 0 3px;
+            border-spacing: 0 2px;
         }
 
         th {
             background-color: #0f172a;
-            color: #94a3b8;
-            padding: 0.6vh 0.8vw;
+            color: #64748b;
+            padding: 0.4vh 0.6vw;
             text-align: left;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             text-transform: uppercase;
             font-weight: 700;
-            position: sticky;
-            top: 0;
-            z-index: 10;
         }
 
         tbody tr {
@@ -135,8 +125,8 @@ By Dr_Morbe V 1.7 - Pantalla Ampliada & Finalizados 3 Filas
         }
 
         td {
-            padding: 0.6vh 0.8vw;
-            font-size: 0.95rem;
+            padding: 0.4vh 0.6vw;
+            font-size: 0.82rem;
             border-top: 1px solid #334155;
             border-bottom: 1px solid #334155;
             white-space: nowrap;
@@ -151,7 +141,7 @@ By Dr_Morbe V 1.7 - Pantalla Ampliada & Finalizados 3 Filas
             color: #38bdf8;
             font-weight: 700;
             font-family: monospace;
-            font-size: 1rem;
+            font-size: 0.88rem;
         }
 
         .cell-sala { color: #ffffff; font-weight: 700; }
@@ -162,16 +152,16 @@ By Dr_Morbe V 1.7 - Pantalla Ampliada & Finalizados 3 Filas
         .badge-grupo {
             background-color: #334155;
             color: #f8fafc;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 0.85rem;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.75rem;
             font-weight: 700;
         }
 
         .badge-estado {
-            padding: 3px 10px;
-            border-radius: 4px;
-            font-size: 0.8rem;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 0.75rem;
             font-weight: 800;
             text-transform: uppercase;
         }
@@ -192,49 +182,17 @@ By Dr_Morbe V 1.7 - Pantalla Ampliada & Finalizados 3 Filas
             100% { opacity: 1; }
         }
 
-        /* CONTENEDORES DE SCROLL INTERNO */
-        .contenedor-proximos {
-            flex-grow: 1;
-            overflow-y: auto;
-            border-radius: 4px;
-        }
-
-        /* EXACTAMENTE 3 FILAS VISIBLES + ENCABEZADO */
-        .contenedor-finalizados {
-            height: 155px; /* Altura fija calculada para mostrar exactamente 3 filas */
-            max-height: 155px;
-            overflow-y: auto;
-            border-radius: 4px;
-            flex-shrink: 0;
-        }
-
-        /* BARRAS DE SCROLL */
-        .contenedor-proximos::-webkit-scrollbar,
-        .contenedor-finalizados::-webkit-scrollbar {
-            width: 8px;
-        }
-        .contenedor-proximos::-webkit-scrollbar-track,
-        .contenedor-finalizados::-webkit-scrollbar-track {
-            background: #0f172a;
-        }
-        .contenedor-proximos::-webkit-scrollbar-thumb,
-        .contenedor-finalizados::-webkit-scrollbar-thumb {
-            background: #475569;
-            border-radius: 4px;
-        }
-
         /* BANNER DE AVISOS */
         footer {
             background: #1e293b;
             border: 1px solid #334155;
             border-left: 5px solid #f59e0b;
             border-radius: 6px;
-            padding: 0.6vh 1vw;
+            padding: 0.5vh 1vw;
             display: flex;
             align-items: center;
             gap: 12px;
-            margin-top: 6px;
-            flex-shrink: 0;
+            height: 5vh;
         }
 
         .avisos-label {
@@ -242,27 +200,46 @@ By Dr_Morbe V 1.7 - Pantalla Ampliada & Finalizados 3 Filas
             color: #0f172a;
             font-weight: 800;
             padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 0.8rem;
+            border-radius: 3px;
+            font-size: 0.75rem;
             text-transform: uppercase;
         }
 
         .avisos-content {
             color: #f1f5f9;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 500;
+        }
+        #contenido-scroll {
+            flex: 1;
+            overflow-y: auto;
+            min-height: 0;
+        }
+
+        /* Barra de desplazamiento */
+        #contenido-scroll::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        #contenido-scroll::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+
+        #contenido-scroll::-webkit-scrollbar-thumb {
+            background: #2563eb;
+            border-radius: 10px;
         }
 
         .empty-row {
             text-align: center;
             color: #64748b;
-            padding: 10px;
+            padding: 6px;
             font-style: italic;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
         }
     </style>
 </head>
-<body id="cuerpo-pagina" tabindex="0">
+<body>
 
     <!-- CABECERA PRINCIPAL -->
     <header>
@@ -277,7 +254,8 @@ By Dr_Morbe V 1.7 - Pantalla Ampliada & Finalizados 3 Filas
         </div>
     </header>
 
-    <main id="contenido-principal">
+    <div id="contenido-scroll">
+
         <!-- CLASES EN CURSO -->
         <div class="section-header en-curso-head">
             <span>● Clases En Curso</span>
@@ -302,46 +280,42 @@ By Dr_Morbe V 1.7 - Pantalla Ampliada & Finalizados 3 Filas
         <div class="section-header proximo-head">
             <span>⏳ Próximos Turnos</span>
         </div>
-        <div class="contenedor-proximos" id="box-proximos">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Horario</th>
-                        <th>Sala / Lab</th>
-                        <th>Materia</th>
-                        <th>Sem.</th>
-                        <th>Grupo</th>
-                        <th>Docente</th>
-                        <th>Debriefing</th>
-                        <th>Estado</th>
-                    </tr>
-                </thead>
-                <tbody id="tabla-proximos"></tbody>
-            </table>
-        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Horario</th>
+                    <th>Sala / Lab</th>
+                    <th>Materia</th>
+                    <th>Sem.</th>
+                    <th>Grupo</th>
+                    <th>Docente</th>
+                    <th>Debriefing</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody id="tabla-proximos"></tbody>
+        </table>
 
-        <!-- CLASES FINALIZADAS (3 FILAS VISIBLES) -->
+        <!-- CLASES FINALIZADAS -->
         <div class="section-header finalizado-head">
             <span>✓ Clases Finalizadas</span>
         </div>
-        <div class="contenedor-finalizados" id="box-finalizados">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Horario</th>
-                        <th>Sala / Lab</th>
-                        <th>Materia</th>
-                        <th>Sem.</th>
-                        <th>Grupo</th>
-                        <th>Docente</th>
-                        <th>Debriefing</th>
-                        <th>Estado</th>
-                    </tr>
-                </thead>
-                <tbody id="tabla-finalizados"></tbody>
-            </table>
-        </div>
-    </main>
+        <table>
+            <thead>
+                <tr>
+                    <th>Horario</th>
+                    <th>Sala / Lab</th>
+                    <th>Materia</th>
+                    <th>Sem.</th>
+                    <th>Grupo</th>
+                    <th>Docente</th>
+                    <th>Debriefing</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody id="tabla-finalizados"></tbody>
+        </table>
+    </div>
     
     <!-- AVISOS GENERALES -->
     <footer>
@@ -350,7 +324,17 @@ By Dr_Morbe V 1.7 - Pantalla Ampliada & Finalizados 3 Filas
     </footer>
 
     <script>
-        let programaDiario = [];
+        let programaDiario = [
+            {
+                horario: "00:00 - 23:59",
+                sala: "Sistema",
+                materia: "Cargando datos...",
+                sem: "-",
+                grupo: "-",
+                docente: "-",
+                debriefing: "-"
+            }
+        ];
         const SHEET_ID = "1o0_UwKws4tBBDZFksagYimqkwG-4lr283btRzGeXfOg";
         const SHEET_NAME = "Planificacion";
 
@@ -358,14 +342,19 @@ By Dr_Morbe V 1.7 - Pantalla Ampliada & Finalizados 3 Filas
             if (!horaStr) return 0;
             const partes = horaStr.trim().split(':');
             if (partes.length < 2) return 0;
-            return (Number(partes[0]) || 0) * 60 + (Number(partes[1]) || 0);
+            const h = Number(partes[0]) || 0;
+            const m = Number(partes[1]) || 0;
+            return h * 60 + m;
         }
 
         async function cargarDatosGoogle() {
             try {
                 const url = `https://opensheet.elk.sh/${SHEET_ID}/${SHEET_NAME}`;
                 const response = await fetch(url);
-                if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
+
+                if (!response.ok) {
+                    throw new Error(`Error HTTP: ${response.status}`);
+                }
 
                 const datos = await response.json();
 
@@ -394,10 +383,16 @@ By Dr_Morbe V 1.7 - Pantalla Ampliada & Finalizados 3 Filas
 
                 if (programaDiario.length === 0) {
                     programaDiario = [{
-                        horario: "", sala: "", materia: "NO HAY TALLERES PROGRAMADOS PARA HOY",
-                        sem: "-", grupo: "-", docente: "-", debriefing: "-"
+                        horario: "",
+                        sala: "",
+                        materia: "NO HAY TALLERES PROGRAMADOS PARA HOY",
+                        sem: "-",
+                        grupo: "-",
+                        docente: "-",
+                        debriefing: "-"
                     }];
-                    document.getElementById("ultima-sync").textContent = "⚠ Sin registros para el día";
+
+                    document.getElementById("ultima-sync").textContent = "⚠ Sin registros para el día de hoy";
                     document.getElementById("ultima-sync").style.color = "#f59e0b";
                 } else {
                     programaDiario.sort((a, b) => {
@@ -416,37 +411,49 @@ By Dr_Morbe V 1.7 - Pantalla Ampliada & Finalizados 3 Filas
 
             } catch (error) {
                 console.error("Error cargando Google Sheets:", error);
-                document.getElementById("ultima-sync").textContent = "⚠ Sin conexión";
+                document.getElementById("ultima-sync").textContent = "⚠ Sin conexión con Google Sheets";
                 document.getElementById("ultima-sync").style.color = "#ef4444";
             }
         }
 
         function actualizarRelojYEstados() {
             const ahora = new Date();
-            document.getElementById('reloj').textContent = `${String(ahora.getHours()).padStart(2, '0')}:${String(ahora.getMinutes()).padStart(2, '0')}:${String(ahora.getSeconds()).padStart(2, '0')}`;
+            
+            const horas = String(ahora.getHours()).padStart(2, '0');
+            const minutos = String(ahora.getMinutes()).padStart(2, '0');
+            const segundos = String(ahora.getSeconds()).padStart(2, '0');
+            document.getElementById('reloj').textContent = `${horas}:${minutos}:${segundos}`;
 
             const opcionesFecha = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'};
-            document.getElementById('fecha-actual').textContent = ahora.toLocaleDateString('es-ES', opcionesFecha).toUpperCase();
+            const fechaFormateada = ahora.toLocaleDateString('es-ES', opcionesFecha);
+            document.getElementById('fecha-actual').textContent = fechaFormateada.toUpperCase();
 
             const minutosActuales = ahora.getHours() * 60 + ahora.getMinutes();
 
-            let htmlEnCurso = '', htmlProximos = '', htmlFinalizados = '';
+            let htmlEnCurso = '';
+            let htmlProximos = '';
+            let htmlFinalizados = '';
 
             programaDiario.forEach(clase => {
                 if (!clase.horario) return;
 
                 const [strInicio, strFin] = clase.horario.split('-').map(h => h.trim());
+
                 const inicioMin = horaAMinutos(strInicio);
                 const finMin = horaAMinutos(strFin);
 
-                let estado = '', badgeClass = '';
+                let estado = '';
+                let badgeClass = '';
 
                 if (minutosActuales < inicioMin) {
-                    estado = 'PRÓXIMO'; badgeClass = 'status-proximo';
+                    estado = 'PRÓXIMO';
+                    badgeClass = 'status-proximo';
                 } else if (minutosActuales >= inicioMin && minutosActuales < finMin) {
-                    estado = 'EN CURSO'; badgeClass = 'status-en-curso';
+                    estado = 'EN CURSO';
+                    badgeClass = 'status-en-curso';
                 } else {
-                    estado = 'FINALIZADO'; badgeClass = 'status-finalizado';
+                    estado = 'FINALIZADO';
+                    badgeClass = 'status-finalizado';
                 }
 
                 const filaHTML = `
@@ -472,73 +479,73 @@ By Dr_Morbe V 1.7 - Pantalla Ampliada & Finalizados 3 Filas
             document.getElementById('tabla-finalizados').innerHTML = htmlFinalizados || '<tr><td colspan="8" class="empty-row">No hay clases finalizadas aún.</td></tr>';
         }
 
+        /* FUNCIÓN DE COLOR DE MATERIAS ACTUALIZADA */
         function colorMateria(materia) {
             if (!materia) return "#f8fafc";
-            const texto = materia.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            
+            const texto = materia
+                .toLowerCase()
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "");
 
-            if (texto.includes("semiologia medica 1") || texto.includes("semiologia medica i")) return "#38bdf8";
-            if (texto.includes("semiologia medica 2") || texto.includes("semiologia medica ii")) return "#818cf8";
-            if (texto.includes("semiologia quirurgica 1") || texto.includes("semiologia quirurgica i")) return "#f97316";
-            if (texto.includes("semiologia quirurgica 2") || texto.includes("semiologia quirurgica ii") || texto.includes("semiologia quirurgica")) return "#f43f5e";
-            if (texto.includes("enfermeria")) return "#a855f7";
-            if (texto.includes("cirugia")) return "#ef4444";
-            if (texto.includes("pediatria")) return "#22c55e";
-            if (texto.includes("gine") || texto.includes("obste")) return "#ec4899";
-            if (texto.includes("medica")) return "#3b82f6";
+            // Evaluación de materias específicas (de lo más específico a lo más general)
+            if (texto.includes("semiologia medica 1") || texto.includes("semiologia medica i")) return "#38bdf8"; // Celeste claro
+            if (texto.includes("semiologia medica 2") || texto.includes("semiologia medica ii")) return "#818cf8"; // Azul violeta / Índigo
+            
+            if (texto.includes("semiologia quirurgica 1") || texto.includes("semiologia quirurgica i")) return "#f97316"; // Naranja
+            if (texto.includes("semiologia quirurgica 2") || texto.includes("semiologia quirurgica ii") || texto.includes("semiologia quirurgica")) return "#f43f5e"; // Rosa Intenso / Coral
 
-            return "#f8fafc";
+            if (texto.includes("enfermeria")) return "#a855f7"; // Púrpura brillante
+            if (texto.includes("cirugia")) return "#ef4444"; // Rojo
+            if (texto.includes("pediatria")) return "#22c55e"; // Verde
+            if (texto.includes("gine") || texto.includes("obste")) return "#ec4899"; // Rosado
+            if (texto.includes("medica")) return "#3b82f6"; // Azul
+
+            return "#f8fafc"; // Blanco por defecto
         }
 
-        /* BANNER AVISOS */
+        let wakeLock = null;
+
+        async function activarMantenerPantallaEncendida() {
+            try {
+                wakeLock = await navigator.wakeLock.request('screen');
+                wakeLock.addEventListener('release', () => {
+                    console.log("⚠ Wake Lock LIBERADO");
+                });
+            } catch (err) {
+                console.error("❌ Error Wake Lock:", err.name, err.message);
+            }
+        }
+
+        document.addEventListener('visibilitychange', async () => {
+            if (wakeLock !== null && document.visibilityState === 'visible') {
+                await activarMantenerPantallaEncendida();
+            }
+        });
+
         const avisos = [
             "Llegar puntualmente a los talleres",
             "Uso obligatorio de uniforme completo",
             "No ingresar alimentos o bebidas",
             "Mantener silencio durante simulaciones"
         ];
+
         let avisoActual = 0;
+
         function actualizarAviso() {
             document.getElementById("avisos-content").textContent = avisos[avisoActual];
             avisoActual = (avisoActual + 1) % avisos.length;
         }
+
         actualizarAviso();
         setInterval(actualizarAviso, 10000);
 
-        /* MANDO TV SCROLL */
-        function capturarMandoTV(e) {
-            const code = e.keyCode || e.which;
-            const paso = 100;
-            const boxProximos = document.getElementById('box-proximos');
-            const boxFinalizados = document.getElementById('box-finalizados');
-
-            if ([40, 428, 34, 417, 20].includes(code) || e.key === 'ArrowDown') {
-                if (boxProximos && (boxProximos.scrollTop + boxProximos.clientHeight < boxProximos.scrollHeight)) {
-                    boxProximos.scrollTop += paso;
-                } else if (boxFinalizados && (boxFinalizados.scrollTop + boxFinalizados.clientHeight < boxFinalizados.scrollHeight)) {
-                    boxFinalizados.scrollTop += paso;
-                }
-                e.preventDefault();
-            } 
-            else if ([38, 427, 33, 412, 19].includes(code) || e.key === 'ArrowUp') {
-                if (boxFinalizados && boxFinalizados.scrollTop > 0) {
-                    boxFinalizados.scrollTop -= paso;
-                } else if (boxProximos && boxProximos.scrollTop > 0) {
-                    boxProximos.scrollTop -= paso;
-                }
-                e.preventDefault();
-            }
-        }
-
-        window.addEventListener('keydown', capturarMandoTV, true);
-        document.addEventListener('keydown', capturarMandoTV, true);
-
-        window.onload = () => {
-            document.body.focus();
-            cargarDatosGoogle();
-        };
+        document.addEventListener('click', activarMantenerPantallaEncendida, { once: true });
 
         setInterval(actualizarRelojYEstados, 1000);
+        cargarDatosGoogle();
         setInterval(cargarDatosGoogle, 15000);
+        activarMantenerPantallaEncendida();
     </script>
 </body>
 </html>
