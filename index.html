@@ -1,4 +1,4 @@
-By Dr_Morbe V 1.1
+By Dr_Morbe V 1.1 
 
 <!DOCTYPE html>
 <html lang="es">
@@ -210,10 +210,16 @@ By Dr_Morbe V 1.1
             font-size: 0.85rem;
             font-weight: 500;
         }
+        
         #contenido-scroll {
             flex: 1;
             overflow-y: auto;
             min-height: 0;
+            outline: none; /* Remueve el marco predeterminado de foco */
+        }
+
+        #contenido-scroll:focus {
+            box-shadow: inset 0 0 0 2px rgba(56, 189, 248, 0.2); /* Feedback visual suave al estar enfocado */
         }
 
         /* Barra de desplazamiento */
@@ -254,7 +260,8 @@ By Dr_Morbe V 1.1
         </div>
     </header>
 
-    <div id="contenido-scroll">
+    <!-- Atributo tabindex="0" asignado para habilitar capturar el foco del control remoto -->
+    <div id="contenido-scroll" tabindex="0">
 
         <!-- CLASES EN CURSO -->
         <div class="section-header en-curso-head">
@@ -540,7 +547,47 @@ By Dr_Morbe V 1.1
         actualizarAviso();
         setInterval(actualizarAviso, 10000);
 
-        document.addEventListener('click', activarMantenerPantallaEncendida, { once: true });
+        /* CONTROL DE NAVEGACIÓN VÍA CONTROL REMOTO / TECLADO */
+        const contenedorScroll = document.getElementById('contenido-scroll');
+
+        function enfocarContenedor() {
+            if (contenedorScroll) {
+                contenedorScroll.focus();
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', enfocarContenedor);
+        document.addEventListener('click', () => {
+            activarMantenerPantallaEncendida();
+            enfocarContenedor();
+        }, { once: true });
+
+        document.addEventListener('keydown', (e) => {
+            const pasoScroll = 120; // Píxeles por cada pulsación
+            const tecla = e.key;
+            const codigo = e.keyCode;
+
+            // Soporte para flecha Abajo / Canal- / PageDown
+            if (tecla === 'ArrowDown' || codigo === 40) {
+                contenedorScroll.scrollBy({ top: pasoScroll, behavior: 'smooth' });
+                e.preventDefault();
+            } 
+            // Soporte para flecha Arriba / Canal+ / PageUp
+            else if (tecla === 'ArrowUp' || codigo === 38) {
+                contenedorScroll.scrollBy({ top: -pasoScroll, behavior: 'smooth' });
+                e.preventDefault();
+            } 
+            // Avance rápido de página
+            else if (tecla === 'PageDown' || codigo === 34) {
+                contenedorScroll.scrollBy({ top: contenedorScroll.clientHeight * 0.8, behavior: 'smooth' });
+                e.preventDefault();
+            } 
+            // Retroceso rápido de página
+            else if (tecla === 'PageUp' || codigo === 33) {
+                contenedorScroll.scrollBy({ top: -contenedorScroll.clientHeight * 0.8, behavior: 'smooth' });
+                e.preventDefault();
+            }
+        });
 
         setInterval(actualizarRelojYEstados, 1000);
         cargarDatosGoogle();
