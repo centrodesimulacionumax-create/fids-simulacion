@@ -1,4 +1,4 @@
-By Dr_Morbe V 1.1 
+By Dr_Morbe V.1.2
 
 <!DOCTYPE html>
 <html lang="es">
@@ -14,7 +14,6 @@ By Dr_Morbe V 1.1
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
 
-        /* Ocultar barra de desplazamiento en todo el sistema */
         html, body {
             width: 100vw;
             height: 100vh;
@@ -147,6 +146,7 @@ By Dr_Morbe V 1.1
         .cell-sala { color: #ffffff; font-weight: 700; }
         .cell-materia { color: #f8fafc; font-weight: 600; }
         .cell-docente { color: #cbd5e1; }
+        .cell-material { color: #facc15; font-weight: 600; }
         .cell-debriefing { color: #fbbf24; font-weight: 600; }
 
         .badge-grupo {
@@ -210,13 +210,13 @@ By Dr_Morbe V 1.1
             font-size: 0.85rem;
             font-weight: 500;
         }
+
         #contenido-scroll {
             flex: 1;
             overflow-y: auto;
             min-height: 0;
         }
 
-        /* Barra de desplazamiento */
         #contenido-scroll::-webkit-scrollbar {
             width: 10px;
         }
@@ -269,6 +269,7 @@ By Dr_Morbe V 1.1
                     <th>Sem.</th>
                     <th>Grupo</th>
                     <th>Docente</th>
+                    <th>Material / Equipo</th>
                     <th>Debriefing</th>
                     <th>Estado</th>
                 </tr>
@@ -289,6 +290,7 @@ By Dr_Morbe V 1.1
                     <th>Sem.</th>
                     <th>Grupo</th>
                     <th>Docente</th>
+                    <th>Material / Equipo</th>
                     <th>Debriefing</th>
                     <th>Estado</th>
                 </tr>
@@ -309,6 +311,7 @@ By Dr_Morbe V 1.1
                     <th>Sem.</th>
                     <th>Grupo</th>
                     <th>Docente</th>
+                    <th>Material / Equipo</th>
                     <th>Debriefing</th>
                     <th>Estado</th>
                 </tr>
@@ -332,6 +335,7 @@ By Dr_Morbe V 1.1
                 sem: "-",
                 grupo: "-",
                 docente: "-",
+                material: "-",
                 debriefing: "-"
             }
         ];
@@ -377,6 +381,7 @@ By Dr_Morbe V 1.1
                         sem: obtenerValor(fila, "semestre", "sem.", "sem"),
                         grupo: obtenerValor(fila, "grupo", "grp"),
                         docente: obtenerValor(fila, "docente", "profesor"),
+                        material: obtenerValor(fila, "material / equipo principal", "material / equipo", "material", "equipo"),
                         debriefing: obtenerValor(fila, "aula de debriefing", "debriefing", "debrief")
                     }))
                     .filter(item => item.horario !== "" && item.horario.includes("-"));
@@ -389,6 +394,7 @@ By Dr_Morbe V 1.1
                         sem: "-",
                         grupo: "-",
                         docente: "-",
+                        material: "-",
                         debriefing: "-"
                     }];
 
@@ -464,7 +470,8 @@ By Dr_Morbe V 1.1
                         <td>${clase.sem}</td>
                         <td><span class="badge-grupo">${clase.grupo}</span></td>
                         <td class="cell-docente">${clase.docente}</td>
-                        <td class="cell-debriefing">${clase.debriefing}</td>
+                        <td class="cell-material">${clase.material || '-'}</td>
+                        <td class="cell-debriefing">${clase.debriefing || '-'}</td>
                         <td><span class="badge-estado ${badgeClass}">${estado}</span></td>
                     </tr>
                 `;
@@ -474,12 +481,11 @@ By Dr_Morbe V 1.1
                 else htmlFinalizados += filaHTML;
             });
 
-            document.getElementById('tabla-en-curso').innerHTML = htmlEnCurso || '<tr><td colspan="8" class="empty-row">No hay clases en curso actualmente.</td></tr>';
-            document.getElementById('tabla-proximos').innerHTML = htmlProximos || '<tr><td colspan="8" class="empty-row">No hay turnos próximos.</td></tr>';
-            document.getElementById('tabla-finalizados').innerHTML = htmlFinalizados || '<tr><td colspan="8" class="empty-row">No hay clases finalizadas aún.</td></tr>';
+            document.getElementById('tabla-en-curso').innerHTML = htmlEnCurso || '<tr><td colspan="9" class="empty-row">No hay clases en curso actualmente.</td></tr>';
+            document.getElementById('tabla-proximos').innerHTML = htmlProximos || '<tr><td colspan="9" class="empty-row">No hay turnos próximos.</td></tr>';
+            document.getElementById('tabla-finalizados').innerHTML = htmlFinalizados || '<tr><td colspan="9" class="empty-row">No hay clases finalizadas aún.</td></tr>';
         }
 
-        /* FUNCIÓN DE COLOR DE MATERIAS ACTUALIZADA */
         function colorMateria(materia) {
             if (!materia) return "#f8fafc";
             
@@ -488,20 +494,19 @@ By Dr_Morbe V 1.1
                 .normalize("NFD")
                 .replace(/[\u0300-\u036f]/g, "");
 
-            // Evaluación de materias específicas (de lo más específico a lo más general)
-            if (texto.includes("semiologia medica 1") || texto.includes("semiologia medica i")) return "#38bdf8"; // Celeste claro
-            if (texto.includes("semiologia medica 2") || texto.includes("semiologia medica ii")) return "#818cf8"; // Azul violeta / Índigo
+            if (texto.includes("semiologia medica 1") || texto.includes("semiologia medica i")) return "#38bdf8"; 
+            if (texto.includes("semiologia medica 2") || texto.includes("semiologia medica ii")) return "#818cf8"; 
             
-            if (texto.includes("semiologia quirurgica 1") || texto.includes("semiologia quirurgica i")) return "#f97316"; // Naranja
-            if (texto.includes("semiologia quirurgica 2") || texto.includes("semiologia quirurgica ii") || texto.includes("semiologia quirurgica")) return "#f43f5e"; // Rosa Intenso / Coral
+            if (texto.includes("semiologia quirurgica 1") || texto.includes("semiologia quirurgica i")) return "#f97316"; 
+            if (texto.includes("semiologia quirurgica 2") || texto.includes("semiologia quirurgica ii") || texto.includes("semiologia quirurgica")) return "#f43f5e"; 
 
-            if (texto.includes("enfermeria")) return "#a855f7"; // Púrpura brillante
-            if (texto.includes("cirugia")) return "#ef4444"; // Rojo
-            if (texto.includes("pediatria")) return "#22c55e"; // Verde
-            if (texto.includes("gine") || texto.includes("obste")) return "#ec4899"; // Rosado
-            if (texto.includes("medica")) return "#3b82f6"; // Azul
+            if (texto.includes("enfermeria")) return "#a855f7"; 
+            if (texto.includes("cirugia")) return "#ef4444"; 
+            if (texto.includes("pediatria")) return "#22c55e"; 
+            if (texto.includes("gine") || texto.includes("obste")) return "#ec4899"; 
+            if (texto.includes("medica")) return "#3b82f6"; 
 
-            return "#f8fafc"; // Blanco por defecto
+            return "#f8fafc"; 
         }
 
         let wakeLock = null;
